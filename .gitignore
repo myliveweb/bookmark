@@ -1,0 +1,30 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Gemini-recommended ignores
+.env
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
+processed_bookmarks/
+
+# Boss's requested ignores
+.gemini/
+.vscode/
+bookmarks/
+llm/
+supabase/
+classify_markdown.py
+clean_http_bookmarks.py
+fix.txt
+parse_bookmark.py
+reset_progress.py
