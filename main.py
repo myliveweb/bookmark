@@ -1,5 +1,6 @@
 import os
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from typing import List
 from dotenv import load_dotenv
@@ -40,7 +41,7 @@ def get_bookmarks():
 @app.post("/bookmarks", response_model=Bookmark, status_code=201)
 def create_bookmark(bookmark: BookmarkCreate):
     """Создать новую закладку."""
-    bookmark_dict = bookmark.dict()
+    bookmark_dict = bookmark.model_dump(mode='json')
     response = supabase.table('bookmarks').insert(bookmark_dict).execute()
 
     if not response.data:
@@ -49,4 +50,13 @@ def create_bookmark(bookmark: BookmarkCreate):
     return response.data[0]
 
 # Размещаем в конце, чтобы API эндпоинты имели приоритет
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+
+@app.get("/app")
+
+async def serve_frontend():
+
+    return FileResponse("static/index.html")
