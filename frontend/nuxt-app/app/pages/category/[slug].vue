@@ -12,27 +12,6 @@
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
         <BookmarkCard v-for="bookmark in bookmarks" :key="bookmark.id" :bookmark="bookmark" />
       </div>
-
-      <!-- <Pagination
-        v-if="totalPages > 1"
-        :total="totalBookmarks"
-        :items-per-page="PAGE_SIZE"
-        :page="currentPage"
-        @update:page="newPage => currentPage = newPage"
-        class="flex justify-center"
-      >
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious :disabled="currentPage === 1" @click="currentPage--" />
-          </PaginationItem>
-          <PaginationItem v-for="page in totalPages" :key="page" :is-active="page === currentPage" @click="currentPage = page" class="cursor-pointer">
-            {{ page }}
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext :disabled="currentPage === totalPages" @click="currentPage++" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination> -->
       <Pagination v-if="totalPages > 1" v-slot="{ page }" @update:page="newPage => currentPage = newPage" :items-per-page="PAGE_SIZE" :total="totalBookmarks" :default-page="currentPage">
       <PaginationContent v-slot="{ items }">
         <PaginationPrevious />

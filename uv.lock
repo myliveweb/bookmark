@@ -156,6 +156,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "beautifulsoup4" },
+    { name = "exa-py" },
     { name = "fastapi", extra = ["all"] },
     { name = "httpx" },
     { name = "langchain" },
@@ -182,6 +183,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.14.3" },
+    { name = "exa-py", specifier = ">=2.2.0" },
     { name = "fastapi", extras = ["all"], specifier = ">=0.128.0" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "langchain", specifier = ">=1.2.6" },
@@ -454,6 +456,24 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d3/38/af70d7ab1ae9d4da450eeec1fa3918940a5fafb9055e934af8d6eb0c2313/et_xmlfile-2.0.0.tar.gz", hash = "sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54", size = 17234, upload-time = "2024-10-25T17:25:40.039Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl", hash = "sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa", size = 18059, upload-time = "2024-10-25T17:25:39.051Z" },
+]
+
+[[package]]
+name = "exa-py"
+version = "2.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "httpcore" },
+    { name = "httpx" },
+    { name = "openai" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "requests" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/7a/01/aa85d5c8c2ed7452816313eb4db865a9d17b2102fdbc33792182f94a94e6/exa_py-2.2.0.tar.gz", hash = "sha256:0e075705b1bc07bebcdc99935f01567706c72e78359a4d427c313fd382e817b4", size = 47542, upload-time = "2026-01-27T22:29:02.057Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/03/3f/69a5fed1b12489124aad1cdd9a38e094f13c7891df73df6a9c7e4c6d5c52/exa_py-2.2.0-py3-none-any.whl", hash = "sha256:a0f7c7c4d0d5dc8162e69e5fc4d3ff2067442b9abf2ebdef4dbe329f093822c9", size = 62763, upload-time = "2026-01-27T22:29:01.086Z" },
 ]
 
 [[package]]
