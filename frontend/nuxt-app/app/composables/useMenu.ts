@@ -1,5 +1,5 @@
 import { useSupabaseClient } from '#imports'
-import type { Database } from '~/../../../database.types'
+import type { Database } from '~/../../database.types'
 
 export const useMenu = () => {
   const client = useSupabaseClient<Database>()

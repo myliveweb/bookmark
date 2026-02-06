@@ -1,7 +1,8 @@
 import os
 from collections import defaultdict
 
-NEW_PROCESSED_BOOKMARKS_DIR = "frontend/nuxt-app/public/processed_bookmarks"
+NEW_PROCESSED_BOOKMARKS_DIR = "photo"
+file_type_dir = []
 
 def count_file_types():
     file_type_counts = defaultdict(int)
@@ -17,6 +18,9 @@ def count_file_types():
             ext = ext.lower() # Normalize extension to lowercase
             if ext: # Only count if there is an extension
                 file_type_counts[ext] += 1
+                if ext == ".lnk":
+                    if root not in file_type_dir:
+                        file_type_dir.append(root)
             else:
                 file_type_counts["no_extension"] += 1 # Files without an extension
             total_files += 1
@@ -29,3 +33,4 @@ if __name__ == "__main__":
     for ext, count in sorted(counts.items()):
         print(f"  {ext}: {count}")
     print(f"Total files: {total}")
+    print(f"Gif dir: {file_type_dir}")

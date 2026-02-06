@@ -19,6 +19,7 @@ processed_bookmarks/
 
 # Boss's requested ignores
 .gemini/
+GEMINI.md
 .vscode/
 bookmarks/
 llm/
@@ -30,4 +31,4 @@ parse_bookmark.py
 reset_progress.py
 frontend/nuxt-app/public/processed_bookmarks/
 frontend/nuxt-app/node_modules/
-photo/
+photo/temp_screenshots/

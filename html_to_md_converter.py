@@ -6,7 +6,7 @@ from markdownify import markdownify as md # Используем markdownify
 import asyncio
 
 # --- Основные настройки ---
-PROCESSED_BOOKMARKS_DIR = "processed_bookmarks"
+PROCESSED_BOOKMARKS_DIR = "frontend/nuxt-app/public/processed_bookmarks"
 CONVERT_LIMIT_VALID = 1000000 # Конвертировать все валидные HTML-файлы
 
 # Инициализация markdownify (если нужны параметры, можно передать их здесь)

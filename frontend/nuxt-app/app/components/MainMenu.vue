@@ -7,11 +7,11 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu'
-import ListItem from '@/components/ui/navigation-menu/ListItem.vue'
+} from '~/components/ui/navigation-menu'
+import ListItem from '~/components/ui/navigation-menu/ListItem.vue'
 import { useMenu } from '~/composables/useMenu'
 import { useTheme } from '~/composables/useTheme'
-import { Button } from '@/components/ui/button'
+import { Button } from '~/components/ui/button'
 import { Sun, Moon, Circle } from 'lucide-vue-next'
 
 const { getMenu } = useMenu()
