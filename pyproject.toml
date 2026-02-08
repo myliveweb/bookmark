@@ -28,4 +28,5 @@ dependencies = [
     "numpy==1.26.4",
     "python-slugify>=8.0.4",
     "exa-py>=2.2.0",
+    "notebooklm-mcp-server>=0.1.15",
 ]

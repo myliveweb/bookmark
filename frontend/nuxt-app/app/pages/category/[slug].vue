@@ -7,8 +7,11 @@
     <div v-else-if="error" class="p-4">
       <p>Error loading bookmarks: {{ error.message }}</p>
     </div>
-    <div v-else class="p-4">
-      <p>Found {{ totalBookmarks }} processed bookmarks in this category.</p>
+    <div v-else class="p-4 pt-0">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <p class="text-muted-foreground font-medium">Found {{ totalBookmarks }} processed bookmarks in this category.</p>
+        <AddBookmarkBar />
+      </div>
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
         <BookmarkCard v-for="bookmark in bookmarks" :key="bookmark.id" :bookmark="bookmark" />
       </div>

@@ -1,6 +1,13 @@
-from exa_py import Exa
+# Current file: /home/sergey/pet/uv/bookmark/bookmark.py
 
-exa = Exa(api_key="057a1915-1d80-496f-9618-746e973395e8") 
+from exa_py import Exa
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+exa = Exa(api_key=os.getenv("EXA_API_KEY"))
+
 result = exa.search(
   "Почему небо голубое",
   type="auto",
