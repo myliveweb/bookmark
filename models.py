@@ -1,9 +1,12 @@
 # models.py
-from pydantic import BaseModel, HttpUrl, Field
+from pydantic import BaseModel, HttpUrl, Field, AliasChoices
 from typing import Optional, List
 
 class AIAnalysisResult(BaseModel):
-    categories: List[str] = Field(description="Список 1-3 релевантных IT-категорий из предложенного списка")
+    categories: List[str] = Field(
+        validation_alias=AliasChoices('categories', 'classification'),
+        description="Список 1-3 релевантных IT-категорий из предложенного списка"
+    )
     summary: str = Field(description="Краткое описание контента на русском языке (2-3 предложения)")
 
 class BookmarkCreate(BaseModel):
@@ -49,3 +52,7 @@ class FinalizeBookmarkRequest(BaseModel):
     temp_screenshot_path: Optional[str] = None
     temp_html_path: Optional[str] = None
     temp_markdown_path: Optional[str] = None
+
+class RegenerateSummaryRequest(BaseModel):
+    last_turn: int
+    regenerate_num: int

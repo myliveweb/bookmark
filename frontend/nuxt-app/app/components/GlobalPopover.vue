@@ -188,7 +188,8 @@ async function handleSave() {
           url: editData.value.url,
           summary: editData.value.summary,
           date_add: editData.value.date_add,
-          categories: editData.value.categories
+          categories: editData.value.categories,
+          is_processed: true
         })
         .select()
         .single()
@@ -264,12 +265,16 @@ async function handleResnap() {
 async function handleDelete() {
   if (!bookmark.value?.id) return
   try {
-    const { error } = await supabase.from('bookmarks').delete().eq('id', bookmark.value.id)
-    if (error) throw error
+    const response = await fetch(`http://127.0.0.1:8000/api/bookmarks/${bookmark.value.id}`, {
+      method: 'DELETE'
+    })
+    
+    if (!response.ok) throw new Error('Ошибка при удалении закладки через API')
+    
     closePopover()
     window.location.reload()
   } catch (err) {
-    console.error(err)
+    console.error('Ошибка удаления:', err)
   }
 }
 </script>
@@ -280,12 +285,16 @@ async function handleDelete() {
     <!-- РЕЖИМ: EDIT или ADD -->
     <Card v-if="type === 'edit' || type === 'add'" ref="popoverRef" :style="style" class="w-full max-w-[850px] max-h-[95vh] overflow-y-auto shadow-2xl border-2 flex flex-col">
       <CardHeader class="border-b bg-muted/30 py-4">
-        <div class="flex justify-between items-center">
-          <CardTitle class="text-xl font-bold flex items-center gap-2">
-            <Sparkles v-if="type === 'add'" class="h-5 w-5 text-yellow-500" />
-            <Pencil v-else class="h-5 w-5 text-primary" />
-            {{ type === 'add' ? 'Добавление новой закладки' : 'Редактирование закладки' }}
-          </CardTitle>
+        <div class="flex justify-between items-center w-full">
+          <div class="flex items-center gap-3">
+            <CardTitle class="text-xl font-bold flex items-center gap-2">
+              <Sparkles v-if="type === 'add'" class="h-5 w-5 text-yellow-500" />
+              <Pencil v-else class="h-5 w-5 text-primary" />
+              {{ type === 'add' ? 'Добавление новой закладки' : 'Редактирование закладки' }}
+            </CardTitle>
+            <!-- Крупный спиннер ожидания в шапке -->
+            <Loader2 v-if="isProcessing" class="h-7 w-7 animate-spin text-primary" />
+          </div>
           <Button @click="closePopover" variant="ghost" size="icon"><X class="h-5 w-5" /></Button>
         </div>
       </CardHeader>
@@ -297,7 +306,6 @@ async function handleDelete() {
               <Label for="title">Заголовок</Label>
               <div class="relative">
                 <Input id="title" v-model="editData.title" :disabled="isProcessing" placeholder="Название закладки" />
-                <Loader2 v-if="isProcessing" class="absolute right-3 top-2.5 h-4 w-4 animate-spin text-muted-foreground" />
               </div>
             </div>
             <div class="space-y-2">

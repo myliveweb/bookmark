@@ -12,7 +12,8 @@ class ModelOllama:
     def __init__(
         self,
         provider: Literal["deepseek", "qwen", "gemini", "openai", "openai_small"],
-        temperature: float = 0.2
+        temperature: float = 0.2,
+        format: str = "json"
     ):
         start_time = time.time()
 
@@ -33,12 +34,14 @@ class ModelOllama:
 
         self.provider = provider
         self.model = model
+        self.temperature = temperature
+        self.format = format
 
         # Добавляем format="json" для гарантированного структурированного вывода
         self.llm = ChatOllama(
             model=self.model,
-            temperature=temperature,
-            format="json"
+            temperature=self.temperature,
+            format=self.format
         )
 
         logger.success(f"ModelOllama полностью инициализирована за {time.time() - start_time:.2f} сек.")

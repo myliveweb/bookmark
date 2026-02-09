@@ -17,12 +17,16 @@ from playwright.async_api import async_playwright
 from loguru import logger
 from slugify import slugify
 from markitdown import MarkItDown
+from datetime import datetime, timedelta
 
 from llm.model import ModelOllama
+from langchain_core.messages import HumanMessage
 from models import (
     Bookmark, BookmarkCreate, ResnapRequest, CommitScreenshotRequest, 
     CategoriesResponse, CreateCategoryRequest, ProcessUrlRequest, 
-    FinalizeBookmarkRequest, ProcessUrlResponse, AIAnalysisResult
+    FinalizeBookmarkRequest, ProcessUrlResponse, AIAnalysisResult, 
+    RegenerateSummaryRequest
+
 )
 
 # Выгружаем переменные окружения
@@ -73,21 +77,22 @@ async def analyze_markdown_content(markdown_content: str):
     if not llm_engine:
         return {"summary": "", "categories": []}
 
-    prompt = f"""Проанализируй следующий текст и выполни две задачи:
+    prompt = f"""Ты — эксперт по классификации и суммаризации контента.
+Проанализируй следующий текст и выполни две задачи:
 
-1. **Классификация:** Определи наиболее релевантные категории для текста. Выбирай категории СТРОГО И ТОЛЬКО из следующего списка:
+1. **Categories (categories):** Определи наиболее релевантные категории для текста. Выбирай категории СТРОГО И ТОЛЬКО из следующего списка:
 - **Программирование и Разработка:** Python, JavaScript, TypeScript, PHP, Go, Java, C#, C++, Ruby, Rust, Swift, Kotlin, Bash/Shell, Node.js, Django, Flask, FastAPI, Laravel, Spring, ASP.NET, Ruby on Rails, Express.js, NestJS, .NET, React, Vue.js, Angular, Svelte, jQuery, Next.js, Nuxt.js, Web Components, Android, iOS, React Native, Flutter, Electron, WPF, Qt, Unity, Unreal Engine, Godot, Game Development, Embedded Systems, IoT, C/C++ (Low-Level), Assembler, 1С-Битрикс/Bitrix Framework
 - **Инфраструктура и DevOps:** AWS, Google Cloud (GCP), Microsoft Azure, Yandex.Cloud, DigitalOcean, Heroku, Docker, Kubernetes, OpenShift, Podman, Helm, Jenkins, GitLab CI, GitHub Actions, CircleCI, Travis CI, Argo CD, Ansible, Terraform, Puppet, Chef, SaltStack, Prometheus, Grafana, ELK Stack, Sentry, Datadog, VMware, VirtualBox, KVM, Xen, Linux, Windows Server, macOS, Unix, Сетевое администрирование, Протоколы, Firewall
 - **Базы Данных:** PostgreSQL, MySQL, MariaDB, SQL Server, Oracle, SQLite, MongoDB, Redis, Cassandra, Neo4j, Couchbase, Elasticsearch (DB), Data Warehousing, Data Lake, Snowflake, BigQuery, GraphQL (DB), REST API Design
 - **Искусственный Интеллект и Машинное Обучение:** TensorFlow, PyTorch, Scikit-learn, Keras, Data Science, MLOps, Нейронные сети, Computer Vision, NLP, LLMs, Diffusion Models, GANs, Алгоритмы ML, Этика ИИ, Теория ML
 - **Безопасность (Cybersecurity):** OWASP, XSS, SQL Injection, CSRF, Пентестинг, IDS/IPS, VPN, OAuth, OpenID Connect, JWT, SSO, Криптография, Шифрование, Хеширование, TLS/SSL, Threat Modeling, Security Best Practices
 - **Дизайн и UX/UI:** UX Дизайн, UI Дизайн, Figma, Sketch, Adobe XD, Прототипирование, Веб-дизайн, Адаптивный дизайн, CSS Frameworks (Tailwind CSS, Bootstrap), Webflow, Графический Дизайн, Типографика, Иконография, Брендинг
-- **Менеджмент и Бизнес в IT:** Agile, Scrum, Kanban, Waterfall, Jira, Trello, Product Management, Стратегия продукта, MVP, Бизнес-анализ, Аналитика, Метрики, KPI, Карьера в IT, Собеседования, Резюме, Развитие карьеры, Soft Skills, Стартапы, Инвестиции, Бизнес-модели
+- **Менеджмент и Бизнес в IT:** NotebookLM, Agile, Scrum, Kanban, Waterfall, Jira, Trello, Product Management, Стратегия продукта, MVP, Бизнес-анализ, Аналитика, Метрики, KPI, Карьера в IT, Собеседования, Резюме, Развитие карьеры, Soft Skills, Стартапы, Инвестиции, Бизнес-модели
 - **Общие IT-Темы:** Новости IT, Тренды в IT, Технические Блоги, Статьи (IT), Обзоры (IT), Конференции/Мероприятия (IT), Образование/Курсы (IT), Open Source, Книги/Ресурсы (IT), Другое (IT)
 
 Постарайся выбрать 1-3 наиболее релевантные категории. Если ничего не подходит - "Другое (IT)".
 
-2. **Суммаризация:** Создай краткое, информативное резюме текста (2-3 предложения) на РУССКОМ языке.
+2. **Summary (summary):** Создай краткое, информативное резюме текста (2-3 предложения) на РУССКОМ языке.
 
 Текст для анализа:
 ---
@@ -158,6 +163,61 @@ def upload_to_supabase(file_path: str, storage_path: str, content_type: str = "i
             file=f,
             file_options={"content-type": content_type, "upsert": "true"}
         )
+
+async def regenerate_new_summary(summary_old_text, summary_new):
+    # --- Формирование промпта ---
+    prompt_template = """
+# ROLE: Senior Systems Architect & Context Manager
+
+# TASK
+Update the "Continuous Project Summary" by integrating new conversation history with the existing summary. 
+
+# INPUT DATA
+Below is the existing summary and the new messages to be integrated.
+
+[EXISTING SUMMARY]
+{summary_old_text}
+
+[NEW MESSAGES]
+{summary_new}
+
+# CORE OBJECTIVE
+Preserve the technical state of the project so that an AI Agent can resume work without losing track of files, logic, or decisions.
+
+# STRICT RULES FOR CONTENT PRESERVATION
+1. **Tech Stack & Environment**: Always keep the list of languages, frameworks (Python, FastAPI, Nuxt), and server statuses.
+2. **File & Structure Map**: Never delete file paths (e.g., `frontend/nuxt-app/app/components/BookmarkCard.vue`) or database schemas.
+3. **States & Constants**: If a variable, port, or API endpoint was decided upon, it must remain in the summary.
+4. **Logic & Workflow**: Document "How it works" for complex features (e.g., "Finalization moves files from /tmp to /storage via ID").
+5. **Pending Tasks**: Maintain a "Todo" or "Current Focus" list at the end of the summary.
+
+# INSTRUCTION FOR INCREMENTAL UPDATE
+- **Merge, don't just append**: If new info updates old info (e.g., "Moved from File to Postgres"), update the corresponding section.
+- **Compress Narrative**: Remove greetings, politeness, and minor debugging steps. Keep only the "Final Result" of a discussion.
+- **Language**: Maintain the summary in Russian, but keep technical terms, file paths, and code entities in their original English form.
+
+# OUTPUT FORMAT (Strictly follow this structure)
+## PROJECT STATE & SUMMARY
+
+### 1. Technical Stack
+(List of technologies and versions)
+
+### 2. Architecture & Files
+(File paths and their current roles)
+
+### 3. Database & API
+(Schemas, endpoints, and data flows)
+
+### 4. Recent Progress & Decisions
+(What was achieved in the last 50 messages)
+
+### 5. Current Focus & Blocking Issues
+(What are we doing right now?)
+"""
+    prompt = prompt_template.format(summary_old_text=summary_old_text, summary_new=summary_new)
+    response = await llm_engine.llm.ainvoke([HumanMessage(content=prompt)])
+
+    return response.content.strip()
 
 # --- API Endpoints ---
 
@@ -363,6 +423,114 @@ def finalize_bookmark(request: FinalizeBookmarkRequest):
         return {"status": "success", "results": results}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/bookmarks/{bookmark_id}")
+async def delete_bookmark(bookmark_id: int):
+    """
+    Удаляет закладку из базы данных и все связанные файлы из Storage.
+    """
+    try:
+        # 1. Удаление записи из таблицы bookmarks
+        db_response = supabase.table("bookmarks").delete().eq("id", bookmark_id).execute()
+        
+        # 2. Удаление файлов из Storage (бакет screenshots)
+        # Мы удаляем html, markdown и два варианта скриншота (оригинал и обработанный)
+        files_to_delete = [
+            f"html/{bookmark_id}.html",
+            f"markdown/{bookmark_id}.md",
+            f"src_image/{bookmark_id}.png",
+            f"image/{bookmark_id}.png"
+        ]
+        
+        # Выполняем удаление файлов залпом
+        storage_response = supabase.storage.from_("screenshots").remove(files_to_delete)
+        
+        logger.info(f"Successfully deleted bookmark {bookmark_id} and checked files: {files_to_delete}")
+        
+        return {
+            "status": "success", 
+            "message": f"Bookmark {bookmark_id} deleted from DB and Storage cleanup initiated",
+            "db_response": db_response.data,
+            "storage_response": storage_response
+        }
+    except Exception as e:
+        logger.error(f"Error during deletion of bookmark {bookmark_id}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/regenerate_summary")
+async def regenerate_summary(request: RegenerateSummaryRequest):
+    history_file = ".gemini/hooks/history/last.md"
+    summary_file = ".gemini/hooks/history/summary.md"
+
+    if not os.path.exists(history_file):
+        return {"success": "error", "error": f"File not found({history_file})"}
+
+    if not os.path.exists(summary_file):
+        return {"success": "error", "error": f"File not found({summary_file})"}
+
+    try:
+        data_history = ''
+        summary_old_data = ''
+        summary_old_text = ''
+        clean_history_list = []
+        clean_summary_list = []
+        history_last = []
+        history_new = ''
+        summary_last = []
+        summary_new = ''
+
+        with open(history_file, "r", encoding='utf-8') as f:
+            data_history = f.read()
+
+        if data_history:
+            data_history_list = data_history.split('------ ')
+            if len(data_history_list) > 0:
+                for item in data_history_list:
+                    if item == '':
+                        continue
+
+                    clean_history_list.append(f"------ {item.strip()}")
+
+                    item_list = item.split(' ------')
+                    clean_summary_list.append(item_list[1].strip())
+            for item in clean_history_list[-request.last_turn:]:
+                history_last.append(item)
+
+            for item in clean_summary_list[:-request.last_turn]:
+                summary_last.append(item)
+
+        if len(summary_last) > 0:
+            summary_new = '\n'.join(summary_last)
+
+            with open(summary_file, "r", encoding='utf-8') as f:
+                summary_old_data = f.read()
+
+            if summary_old_data:
+                item_list = summary_old_data.split(' ------')
+                summary_old_text = item_list[1].strip()
+
+            summary_new_body = await regenerate_new_summary(summary_old_text, summary_new)
+
+            dt = datetime.now()
+            formatted = dt.strftime("%H:%M:%S %d.%m.%Y")
+
+            summary_out = ''
+            summary_out += f'------ {formatted} ------\n\n'
+            summary_out += summary_new_body
+
+            with open(summary_file, "w") as f:
+                f.write(summary_out.strip())
+
+        if len(history_last) > 0:
+            history_new = '\n\n'.join(history_last)
+            with open(history_file, "w") as f:
+                f.write(history_new.strip())
+
+        return {"last": request.last_turn, "regenerate": request.regenerate_num}
+    except Exception as e:
+        logger.error(f"Regenerate summary: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/app")
