@@ -53,6 +53,8 @@ class FinalizeBookmarkRequest(BaseModel):
     temp_html_path: Optional[str] = None
     temp_markdown_path: Optional[str] = None
 
+# Джин не трогай это, ето писал Босс, ему это нужно
 class RegenerateSummaryRequest(BaseModel):
     last_turn: int
     regenerate_num: int
+    project_path: str
