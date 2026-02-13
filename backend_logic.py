@@ -129,17 +129,25 @@ def upload_to_supabase(file_path: str, storage_path: str, content_type: str):
 
 async def analyze_markdown_content(markdown_content: str):
     """ИИ-анализ контента."""
-    if not llm_engine: return {"summary": "ИИ не подключен", "categories": []}
+    if not llm_engine: 
+        raise Exception("ИИ-двигатель не инициализирован")
+    
+    # Ограничиваем текст до 10000 символов, чтобы влезть в лимит Groq (TPM safety)
+    truncated_content = markdown_content[:10000]
     
     prompt = f"""Ты — эксперт по анализу IT-контента. Проанализируй текст и выдели 1-3 IT-категории и краткое резюме (2-3 предложения) на русском языке.
-Текст: {markdown_content[:50000]}"""
+Текст: {truncated_content}"""
     
     try:
         result: AIAnalysisResult = await llm_engine.send_message_structured_outputs(prompt, AIAnalysisResult)
-        return {"summary": result.summary, "categories": result.categories}
+        # Если категории пустые, мы всё равно считаем это успехом AI (бывают пустые страницы), 
+        # но воркер может зациклиться. Поэтому принудительно ставим заглушку 'Разное' если совсем пусто.
+        categories = result.categories if result.categories else ["Разное"]
+        return {"summary": result.summary, "categories": categories}
     except Exception as e:
         logger.error(f"AI Error: {e}")
-        return {"summary": "Ошибка анализа", "categories": []}
+        # НЕ возвращаем заглушку, а пробрасываем ошибку выше, чтобы цикл зафиксировал её в БД
+        raise e
 
 async def process_bookmark_full_cycle(bookmark_id: int, url: str):
     """
@@ -183,7 +191,6 @@ async def process_bookmark_full_cycle(bookmark_id: int, url: str):
             "title": title,
             "summary": ai_data["summary"],
             "categories": ai_data["categories"],
-            "image_url": image_url,
             "is_processed": True,
             "processing_error": None
         }
@@ -195,10 +202,10 @@ async def process_bookmark_full_cycle(bookmark_id: int, url: str):
 
     except Exception as e:
         logger.error(f"Ошибка цикла для закладки #{bookmark_id}: {str(e)}")
-        # Записываем ошибку в БД, чтобы не пытаться бесконечно
+        # Записываем ошибку в БД и помечаем как обработанную, чтобы воркер не зацикливался
         supabase.table("bookmarks").update({
             "processing_error": str(e),
-            "is_processed": False 
+            "is_processed": True  # Помечаем True, чтобы воркер пропустил её в следующий раз
         }).eq("id", bookmark_id).execute()
         raise e
     finally:

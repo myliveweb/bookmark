@@ -1,46 +1,69 @@
 import asyncio
+import time
+import sys
 from loguru import logger
-import backend_logic as logic
+from backend_logic import process_bookmark_full_cycle, supabase
 
-async def run_worker():
-    print("\n[START] Фоновый конвейер запущен")
-    print("--------------------------------")
+async def run_conveyor():
+    """Воркер для точечной обработки закладок с categories=[]."""
+    logger.info("🚀 Хирургический конвейер V2 запущен.")
+    logger.info("🎯 Цель: ВСЕ закладки с categories=[], игнорируя старые ошибки.")
     
+    # Память воркера, чтобы не крутить одну и ту же ошибку по кругу в рамках одного запуска
+    attempted_ids = set()
+
     while True:
         try:
-            # 1. Ищем одну задачу
-            query = logic.supabase.table("bookmarks").select("*")
-            query = query.eq("is_processed", False)
-            query = query.is_("processing_error", "null")
-            query = query.order("id")
-            query = query.limit(1)
-            response = query.execute()
+            # 1. Запрашиваем только те, где категории пустые []
+            query = supabase.table("bookmarks") \
+                .select("id, url") \
+                .eq("categories", "[]") \
+                .order("id", desc=False)
             
-            if not response.data or len(response.data) == 0:
-                print("Очередь пуста. Ожидание 10 секунд...")
-                await asyncio.sleep(10)
+            # Если у нас уже есть список 'отказников', исключаем их из текущего запроса,
+            # чтобы найти следующую годную закладку.
+            if attempted_ids:
+                query = query.not_.in_("id", list(attempted_ids))
+                
+            response = query.limit(1).execute()
+            bookmarks = response.data
+
+            if not bookmarks:
+                if attempted_ids:
+                    logger.info(f"🏁 Все доступные цели ({len(attempted_ids)}) были опробованы. Новых нет.")
+                else:
+                    logger.info("😴 Очередь пуста. Жду 30 секунд...")
+                await asyncio.sleep(30)
+                # Очищаем память раз в цикл сна, чтобы дать шанс на переповтор через время
+                attempted_ids.clear()
                 continue
-            
-            bookmark = response.data[0]
-            b_id = bookmark['id']
-            url = bookmark['url']
-            
-            print("Processing [" + str(b_id) + "]: " + url)
-            
-            # 2. Запуск логики
-            success = await logic.process_bookmark_logic(url, b_id)
-            
-            if success:
-                print("OK: [" + str(b_id) + "] processed.")
-            else:
-                print("ERROR: [" + str(b_id) + "] failed.")
-            
-            # 3. Пауза
-            await asyncio.sleep(2)
-            
-        except Exception as e:
-            logger.error("Worker Error: " + str(e))
-            await asyncio.sleep(5)
+
+            bookmark = bookmarks[0]
+            b_id = bookmark["id"]
+            url = bookmark["url"]
+
+            # Запоминаем, что мы взялись за этот ID
+            attempted_ids.add(b_id)
+
+            # 2. Запускаем цикл обработки
+            try:
+                # Теперь с 'llama-3.1-8b-instant' и обрезкой текста всё должно летать
+                await process_bookmark_full_cycle(b_id, url)
+            except Exception as e:
+                logger.error(f"❌ Ошибка на #{b_id}: {e}")
+
+            # 3. ПАУЗА (Groq RPM safety)
+            wait_time = 3.0
+            logger.info(f"⏳ Пауза {wait_time} сек...")
+            await asyncio.sleep(wait_time)
+
+        except Exception as main_e:
+            logger.critical(f"🚨 КРИТИЧЕСКАЯ ОШИБКА: {main_e}")
+            await asyncio.sleep(10)
 
 if __name__ == "__main__":
-    asyncio.run(run_worker())
+    try:
+        asyncio.run(run_conveyor())
+    except KeyboardInterrupt:
+        logger.warning("\n🛑 Конвейер остановлен.")
+        sys.exit(0)

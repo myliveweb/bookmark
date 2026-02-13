@@ -13,6 +13,7 @@ import { useMenu } from '~/composables/useMenu'
 import { useTheme } from '~/composables/useTheme'
 import { Button } from '~/components/ui/button'
 import { Sun, Moon, ChevronDown } from 'lucide-vue-next'
+import ConveyorProgress from './ConveyorProgress.vue'
 
 const { getMenu } = useMenu()
 const allMenuItems = ref([])
@@ -21,8 +22,6 @@ onMounted(async () => {
   allMenuItems.value = await getMenu()
 })
 
-// Фильтруем только корневые категории (у которых parent_category === null)
-// Они уже отсортированы в useMenu и имеют bookmarks_count > 0
 const rootCategories = computed(() => {
   return allMenuItems.value.filter(item => item.parent_category === null)
 })
@@ -31,13 +30,15 @@ const { theme, toggleTheme } = useTheme()
 </script>
 
 <template>
-  <div class="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-    <div class="container flex h-16 items-center justify-between">
-      <div class="flex items-center gap-8">
-        <!-- Текстовый логотип -->
-        <NuxtLink to="/" class="flex items-center space-x-2">
-          <span class="text-xl font-bold tracking-tight">Bookmark App</span>
+  <div class="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+    <div class="container flex h-16 items-center">
+      <!-- ЛЕВАЯ ЧАСТЬ: Лого и Категории -->
+      <div class="flex items-center gap-6 flex-1">
+        <NuxtLink to="/" class="flex items-center space-x-2 shrink-0">
+          <span class="text-xl font-black tracking-tighter text-primary">B<span class="text-foreground">M</span></span>
         </NuxtLink>
+
+        <div class="h-6 w-px bg-border mx-2"></div>
 
         <!-- Навигационное меню (Dropdown) -->
         <DropdownMenu>
@@ -47,7 +48,6 @@ const { theme, toggleTheme } = useTheme()
           </DropdownMenuTrigger>
           <DropdownMenuContent class="w-64" align="start">
             <template v-for="category in rootCategories" :key="category.slug">
-              <!-- Если есть подкатегории -->
               <DropdownMenuSub v-if="category.children && category.children.length > 0">
                 <DropdownMenuSubTrigger class="cursor-pointer py-2.5">
                   <div class="flex flex-1 items-center justify-between">
@@ -70,7 +70,6 @@ const { theme, toggleTheme } = useTheme()
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
 
-              <!-- Если нет подкатегорий -->
               <DropdownMenuItem v-else as-child>
                 <NuxtLink :to="`/category/${category.slug}`" class="flex w-full cursor-pointer items-center justify-between py-2.5">
                   <span>{{ category.name }}</span>
@@ -82,8 +81,13 @@ const { theme, toggleTheme } = useTheme()
         </DropdownMenu>
       </div>
 
-      <!-- Переключатель темы справа -->
-      <div class="flex items-center">
+      <!-- ЦЕНТРАЛЬНАЯ ЧАСТЬ: Прогресс -->
+      <div class="flex flex-1 justify-center">
+        <ConveyorProgress />
+      </div>
+
+      <!-- ПРАВАЯ ЧАСТЬ: Тема -->
+      <div class="flex flex-1 justify-end">
         <Button @click="toggleTheme" variant="ghost" size="icon" class="h-10 w-10">
           <Sun class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
