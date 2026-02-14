@@ -33,3 +33,4 @@ reset_progress.py
 frontend/nuxt-app/public/processed_bookmarks/
 frontend/nuxt-app/node_modules/
 photo/temp_screenshots/
+backup/
