@@ -11,6 +11,7 @@ wheels/
 
 # Gemini-recommended ignores
 .env
+.env_backup
 *.log
 .DS_Store
 Thumbs.db
@@ -22,7 +23,7 @@ processed_bookmarks/
 GEMINI.md
 .vscode/
 bookmarks/
-llm/
+
 supabase/
 classify_markdown.py
 clean_http_bookmarks.py

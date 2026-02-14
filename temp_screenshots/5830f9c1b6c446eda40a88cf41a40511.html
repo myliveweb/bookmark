@@ -1,0 +1,501 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="light" data-has-toc="" data-has-sidebar="" class="astro-bguv2lll"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Hooks reference | Gemini CLI</title><link rel="canonical" href="https://geminicli.com/docs/hooks/reference/"><link rel="sitemap" href="/sitemap-index.xml"><link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="true"><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&amp;display=block" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Text:wght@400;500&amp;display=block" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Mono:wght@400;500&amp;display=block" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google+Symbols&amp;display=block" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;icon_names=database,draft,phishing,school,terminal" rel="stylesheet"><link rel="icon" href="/favicon.ico" sizes="32x32"><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-66QE907DJT"></script><script>window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "G-66QE907DJT");</script><link rel="shortcut icon" href="/icon.png" type="image/png"><meta name="generator" content="Astro v5.16.16"><meta name="generator" content="Starlight v0.36.1"><meta property="og:title" content="Hooks reference"><meta property="og:type" content="article"><meta property="og:url" content="https://geminicli.com/docs/hooks/reference/"><meta property="og:locale" content="en"><meta property="og:description"><meta property="og:site_name" content="Gemini CLI"><meta name="twitter:card" content="summary_large_image"><meta property="og:image" content="https://geminicli.com/assets/social-poster.png"><meta name="twitter:image" content="https://geminicli.com/assets/social-poster.png"><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"></path></svg><svg aria-hidden="true" class="dark astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"></path></svg><svg aria-hidden="true" class="auto astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"></path></svg></template><link rel="stylesheet" href="/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/_astro/debugz.Xpjd3RWd.css"><script type="module" src="/_astro/page.B1D-nYk3.js"></script></head> <body class="astro-bguv2lll"> <a href="#_top" class="astro-7q3lir66">Skip to content</a>  <div class="page sl-flex astro-yriad4ts"> <header class="header astro-yriad4ts"><div id="page-header" class="header astro-3ef6ksr2"> <div class="title-wrapper sl-flex items-center astro-3ef6ksr2"> <div class="links-and-menu astro-3ef6ksr2" role="button" aria-label="Open navigation menu"> <a href="/" class="site-title sl-flex astro-m46x6ez3">  <img class="astro-m46x6ez3" alt="Gemini CLI Icon" src="/_astro/icon.Bo4M5sF3.png" width="1645" height="1645">  <span class="astro-m46x6ez3" translate="no"> Gemini CLI </span> </a>  <div class="nav-items astro-jvd4jwbq"> <a href="/" class="mobile-only astro-jvd4jwbq">Home</a> <div class="extensions-container astro-jvd4jwbq"> <a href="/extensions/" class="dark:text-white text-black no-underline extensions-link astro-jvd4jwbq">Extensions</a> <div class="extensions-menu astro-jvd4jwbq"> <a href="/extensions/" class="mobile-hide astro-jvd4jwbq">Gallery</a> <a href="/extensions/about" class="dark:text-white text-black no-underline astro-jvd4jwbq">About Extensions</a> </div> </div> <a href="/docs/" class="dark:text-white text-black no-underline is-active astro-jvd4jwbq">Docs</a> <a href="/docs/changelogs/" class="dark:text-white text-black no-underline astro-jvd4jwbq">Changelog</a> </div>  </div> </div> <div class="sl-flex justify-end print:hidden search astro-3ef6ksr2"> <site-search class="astro-3ef6ksr2 astro-v37mnknz" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"> <button data-open-modal="" aria-label="Search" aria-keyshortcuts="Control+K" class="astro-v37mnknz"> <svg aria-hidden="true" class="astro-v37mnknz astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"></path></svg> <span class="sl-hidden md:sl-block astro-v37mnknz" aria-hidden="true">Search</span> <kbd class="sl-hidden md:sl-flex astro-v37mnknz" style=""> <kbd class="astro-v37mnknz">Ctrl</kbd><kbd class="astro-v37mnknz">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="Search" class="astro-v37mnknz"> <div class="dialog-frame sl-flex astro-v37mnknz">  <button data-close-modal="" class="sl-flex md:sl-hidden astro-v37mnknz"> Cancel </button> <div class="search-container astro-v37mnknz"> <div id="starlight__search" class="astro-v37mnknz"><div class="pagefind-ui svelte-e9gkc3 pagefind-ui--reset"><form class="pagefind-ui__form svelte-e9gkc3" role="search" aria-label="Search this site" action="javascript:void(0);"><input class="pagefind-ui__search-input svelte-e9gkc3" type="text" placeholder="Search" title="Search" autocapitalize="none" enterkeyhint="search"> <button class="pagefind-ui__search-clear svelte-e9gkc3 pagefind-ui__suppressed">Clear</button> <div class="pagefind-ui__drawer svelte-e9gkc3 pagefind-ui__hidden"> </div></form></div></div> </div> </div> </dialog> </site-search>  <script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script> <script type="module" src="/_astro/Search.astro_astro_type_script_index_0_lang.cjYDvRdi.js"></script>   </div> <div class="sl-flex print:hidden right-group astro-3ef6ksr2"> <div class="sl-flex social-icons astro-3ef6ksr2"> <a href="https://github.com/google-gemini/gemini-cli" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"></path></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"></path></svg> <select autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected="" class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script> <script type="module">const r="starlight-theme",o=e=>e==="auto"||e==="dark"||e==="light"?e:"auto",c=()=>o(typeof localStorage<"u"&&localStorage.getItem(r));function n(e){typeof localStorage<"u"&&localStorage.setItem(r,e==="light"||e==="dark"?e:"")}const l=()=>matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";function t(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e==="auto"?l():e,n(e)}matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{c()==="auto"&&t("auto")});class s extends HTMLElement{constructor(){super(),t(c()),this.querySelector("select")?.addEventListener("change",a=>{a.currentTarget instanceof HTMLSelectElement&&t(o(a.currentTarget.value))})}}customElements.define("starlight-theme-select",s);</script> <script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script> </div> </div> <script type="module">const e=document.querySelector("[role=button].links-and-menu");e?.addEventListener("click",t=>{const{matches:s}=window.matchMedia("(max-width: 640px)");if(!s)return;if(e.querySelector(".nav-items")?.contains(t.target)){e.classList.remove("is-active");return}t.preventDefault(),e.classList.toggle("is-active")});</script>  </header> <nav class="sidebar print:hidden astro-yriad4ts" aria-label="Main"> <starlight-menu-button class="print:hidden astro-jif73yzw"> <button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jif73yzw"> <svg aria-hidden="true" class="open-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"></path></svg> <svg aria-hidden="true" class="close-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"></path></svg> </button> </starlight-menu-button> <script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>   <div id="starlight__sidebar" class="sidebar-pane astro-yriad4ts"> <div class="sidebar-content sl-flex astro-yriad4ts"> <sl-sidebar-state-persist data-hash="08oth3l" class="astro-kku4brbg"> <script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script>  <ul class="top-level astro-3ii7xxms"> <li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Get started</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="0"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Overview</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/get-started/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Quickstart</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/get-started/installation/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Installation</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/get-started/authentication/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Authentication</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/get-started/examples/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Examples</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/get-started/gemini-3/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Gemini 3 (preview)</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/cli-reference/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">CLI Reference</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Use Gemini CLI</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="1"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/cli/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Using the CLI</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/tools/file-system/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">File management</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/tools/memory/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Memory management</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/gemini-md/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Project context (GEMINI.md)</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/tools/shell/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Shell commands</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/session-management/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Session management</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/tools/todos/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Todos</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/tools/web-search/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Web search and fetch</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Configuration</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="2"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/cli/gemini-ignore/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Ignore files (.geminiignore)</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/model/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Model selection</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/settings/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Settings</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/themes/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Themes</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/token-caching/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Token caching</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/trusted-folders/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Trusted folders</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Advanced features</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="3"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/cli/checkpointing/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Checkpointing</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/custom-commands/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Custom commands</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/enterprise/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Enterprise features</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/headless/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Headless mode &amp; scripting</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/sandbox/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Sandboxing</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/system-prompt/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">System prompt override</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/telemetry/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Telemetry</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Extensions</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="4"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/extensions/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Introduction</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/extensions/writing-extensions/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Writing extensions</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/extensions/reference/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Extensions reference</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/extensions/best-practices/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Best practices</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/extensions/releasing/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Extensions releasing</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Ecosystem and extensibility</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="5"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/cli/skills/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Agent skills</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/creating-skills/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Creating Agent skills</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/core/subagents/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Sub-agents (experimental)</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/core/remote-agents/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Remote subagents (experimental)</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/hooks/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Hooks</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/ide-integration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">IDE integration</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/tools/mcp-server/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">MCP servers</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Tutorials</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="6"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/extensions/writing-extensions/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Get started with extensions</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/hooks/writing-hooks/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">How to write hooks</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Reference</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="7"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/architecture/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Architecture</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/commands/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Command reference</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/get-started/configuration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Configuration</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/keyboard-shortcuts/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Keyboard shortcuts</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/core/memport/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Memory import processor</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/core/policy-engine/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Policy engine</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/core/tools-api/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Tools API</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Resources</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="8"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/faq/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">FAQ</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/quota-and-pricing/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Quota and pricing</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/tos-privacy/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Terms and privacy</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/troubleshooting/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Troubleshooting</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/cli/uninstall/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Uninstall</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Development</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="9"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/contributing/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Contribution guide</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/integration-tests/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Integration testing</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/issue-and-pr-automation/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Issue and PR automation</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/local-development/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Local development</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/npm/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">NPM package structure</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open="" class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Releases</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </summary> <sl-sidebar-restore data-index="10"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/docs/changelogs/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Release notes</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/changelogs/latest/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Stable release</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/docs/changelogs/preview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Preview release</span>  </a> </li> </ul>  </details> </li> </ul>   <script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script> </sl-sidebar-state-persist>  <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-wu23bvmt"> <div class="social-icons astro-wu23bvmt"> <a href="https://github.com/google-gemini/gemini-cli" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"></path></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"></path></svg> <select autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected="" class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"></path></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div>  </div> </div> </div> </nav> <!-- Main grows to push footer down --> <div class="main-frame astro-yriad4ts">   <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-67yu43on"> <aside class="right-sidebar-container print:hidden astro-67yu43on"> <div class="right-sidebar astro-67yu43on"> <script type="module" src="/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C181hMzK.js"></script><script type="module" src="/_astro/TableOfContents.astro_astro_type_script_index_0_lang.CKWWgpjV.js"></script><div class="lg:sl-hidden astro-pb3aqygn"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-doynk5tl"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-doynk5tl"><details id="starlight__mobile-toc" class="astro-doynk5tl"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-doynk5tl"><span class="toggle sl-flex astro-doynk5tl">On this page<svg aria-hidden="true" class="caret astro-doynk5tl astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"></path></svg></span><span class="display-current astro-doynk5tl"> Introduction </span></summary><div class="dropdown astro-doynk5tl"><ul class="isMobile astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;" aria-current="true"> <span class="astro-g2bywc46" style="--depth: 0;">Introduction</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#global-hook-mechanics" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Global hook mechanics</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#configuration-schema" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Configuration schema</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#hook-definition" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Hook definition</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#hook-configuration" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Hook configuration</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#base-input-schema" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Base input schema</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#common-output-fields" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Common output fields</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#tool-hooks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Tool hooks</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#matchers-and-tool-names" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Matchers and tool names</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#beforetool" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">BeforeTool</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#aftertool" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">AfterTool</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#agent-hooks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Agent hooks</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#beforeagent" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">BeforeAgent</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#afteragent" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">AfterAgent</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#model-hooks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Model hooks</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#beforemodel" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">BeforeModel</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#beforetoolselection" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">BeforeToolSelection</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#aftermodel" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">AfterModel</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#lifecycle--system-hooks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Lifecycle &amp; system hooks</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#sessionstart" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">SessionStart</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#sessionend" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">SessionEnd</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#notification" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Notification</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#precompress" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">PreCompress</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#stable-model-api" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Stable Model API</span> </a>  </li> </ul> </div></details></nav></mobile-starlight-toc></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-pb3aqygn"><div class="sl-container astro-pb3aqygn"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;" aria-current="true"> <span class="astro-g2bywc46" style="--depth: 0;">Introduction</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#global-hook-mechanics" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Global hook mechanics</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#configuration-schema" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Configuration schema</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#hook-definition" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Hook definition</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#hook-configuration" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Hook configuration</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#base-input-schema" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Base input schema</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#common-output-fields" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Common output fields</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#tool-hooks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Tool hooks</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#matchers-and-tool-names" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Matchers and tool names</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#beforetool" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">BeforeTool</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#aftertool" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">AfterTool</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#agent-hooks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Agent hooks</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#beforeagent" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">BeforeAgent</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#afteragent" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">AfterAgent</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#model-hooks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Model hooks</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#beforemodel" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">BeforeModel</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#beforetoolselection" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">BeforeToolSelection</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#aftermodel" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">AfterModel</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#lifecycle--system-hooks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Lifecycle &amp; system hooks</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#sessionstart" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">SessionStart</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#sessionend" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">SessionEnd</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#notification" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Notification</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#precompress" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">PreCompress</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#stable-model-api" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Stable Model API</span> </a>  </li> </ul> </nav></starlight-toc></div></div> </div> </aside> <div class="main-pane astro-67yu43on">  <main data-pagefind-body="" class="astro-bguv2lll" lang="en" dir="ltr">   <script type="module">class i{constructor(){this.init()}init(){document.readyState==="loading"?document.addEventListener("DOMContentLoaded",()=>this.setupEventListeners()):this.setupEventListeners()}setupEventListeners(){const t=document.getElementById("copy-markdown-btn");t&&t.addEventListener("click",()=>this.copyMarkdown())}async copyMarkdown(){const t=document.getElementById("copy-markdown-btn");if(t)try{this.setButtonState(t,"copying");const e=`${window.location.pathname.replace(/\/$/,"")}.md`,o=await fetch(e);if(!o.ok)throw new Error(`Failed to fetch markdown: ${o.status}`);const a=await o.text();await this.copyToClipboard(a),this.setButtonState(t,"success"),setTimeout(()=>{this.setButtonState(t,"default")},2e3)}catch(n){console.error("Failed to copy markdown:",n),this.setButtonState(t,"error"),setTimeout(()=>{this.setButtonState(t,"default")},2e3)}}getCurrentLanguage(){return document.documentElement.getAttribute("data-genkit-lang")||"js"}async copyToClipboard(t){if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(t);else throw new Error("Clipboard API not available.")}setButtonState(t,n){const s=t.querySelector(".button-text"),e=t.querySelector(".success-text");switch(t.classList.remove("copying","success","error"),n){case"copying":t.classList.add("copying"),s&&(s.style.display="none"),e&&(e.textContent="Copying...",e.style.display="inline");break;case"success":t.classList.add("success"),s&&(s.style.display="none"),e&&(e.textContent="Copied!",e.style.display="inline");break;case"error":t.classList.add("error"),s&&(s.style.display="none"),e&&(e.textContent="Error",e.style.display="inline");break;default:s&&(s.style.display="inline"),e&&(e.style.display="none");break}}}new i;</script> <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <div class="flex items-center page-title astro-guvttfii"> <h1 id="_top" class="flex-1 astro-guvttfii"> Hooks reference </h1> <div class="mt-4 astro-guvttfii"> <button id="copy-markdown-btn" class="copy-markdown-button astro-guvttfii astro-ym2cbydy" type="button" aria-label="Copy page content as markdown for selected language" title="Copy as Markdown"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="astro-ym2cbydy"> <rect width="14" height="14" x="8" y="8" rx="2" ry="2" class="astro-ym2cbydy"></rect> <path d="m4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" class="astro-ym2cbydy"></path> </svg> <span class="button-text astro-ym2cbydy">Copy as Markdown</span> <span class="success-text astro-ym2cbydy" style="display: none;">Copied!</span> </button>   </div> </div>  </div> </div>  <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <div class="sl-markdown-content"> <p>This document provides the technical specification for Gemini CLI hooks,
+including JSON schemas and API details.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="global-hook-mechanics">Global hook mechanics</h2><a class="sl-anchor-link" href="#global-hook-mechanics"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Global hook mechanics”</span></a></div>
+<ul>
+<li><strong>Communication</strong>: <code dir="auto">stdin</code> for Input (JSON), <code dir="auto">stdout</code> for Output (JSON), and
+<code dir="auto">stderr</code> for logs and feedback.</li>
+<li><strong>Exit codes</strong>:
+<ul>
+<li><code dir="auto">0</code>: Success. <code dir="auto">stdout</code> is parsed as JSON. <strong>Preferred for all logic.</strong></li>
+<li><code dir="auto">2</code>: System Block. The action is blocked; <code dir="auto">stderr</code> is used as the rejection
+reason.</li>
+<li><code dir="auto">Other</code>: Warning. A non-fatal failure occurred; the CLI continues with a
+warning.</li>
+</ul>
+</li>
+<li><strong>Silence is Mandatory</strong>: Your script <strong>must not</strong> print any plain text to
+<code dir="auto">stdout</code> other than the final JSON.</li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="configuration-schema">Configuration schema</h2><a class="sl-anchor-link" href="#configuration-schema"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Configuration schema”</span></a></div>
+<p>Hooks are defined in <code dir="auto">settings.json</code> within the <code dir="auto">hooks</code> object. Each event
+(e.g., <code dir="auto">BeforeTool</code>) contains an array of <strong>hook definitions</strong>.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="hook-definition">Hook definition</h3><a class="sl-anchor-link" href="#hook-definition"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Hook definition”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Field</th><th align="left">Type</th><th align="left">Required</th><th align="left">Description</th></tr></thead><tbody><tr><td align="left"><code dir="auto">matcher</code></td><td align="left"><code dir="auto">string</code></td><td align="left">No</td><td align="left">A regex (for tools) or exact string (for lifecycle) to filter when the hook runs.</td></tr><tr><td align="left"><code dir="auto">sequential</code></td><td align="left"><code dir="auto">boolean</code></td><td align="left">No</td><td align="left">If <code dir="auto">true</code>, hooks in this group run one after another. If <code dir="auto">false</code>, they run in parallel.</td></tr><tr><td align="left"><code dir="auto">hooks</code></td><td align="left"><code dir="auto">array</code></td><td align="left"><strong>Yes</strong></td><td align="left">An array of <strong>hook configurations</strong>.</td></tr></tbody></table>
+<div class="sl-heading-wrapper level-h3"><h3 id="hook-configuration">Hook configuration</h3><a class="sl-anchor-link" href="#hook-configuration"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Hook configuration”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Field</th><th align="left">Type</th><th align="left">Required</th><th align="left">Description</th></tr></thead><tbody><tr><td align="left"><code dir="auto">type</code></td><td align="left"><code dir="auto">string</code></td><td align="left"><strong>Yes</strong></td><td align="left">The execution engine. Currently only <code dir="auto">"command"</code> is supported.</td></tr><tr><td align="left"><code dir="auto">command</code></td><td align="left"><code dir="auto">string</code></td><td align="left"><strong>Yes*</strong></td><td align="left">The shell command to execute. (Required when <code dir="auto">type</code> is <code dir="auto">"command"</code>).</td></tr><tr><td align="left"><code dir="auto">name</code></td><td align="left"><code dir="auto">string</code></td><td align="left">No</td><td align="left">A friendly name for identifying the hook in logs and CLI commands.</td></tr><tr><td align="left"><code dir="auto">timeout</code></td><td align="left"><code dir="auto">number</code></td><td align="left">No</td><td align="left">Execution timeout in milliseconds (default: 60000).</td></tr><tr><td align="left"><code dir="auto">description</code></td><td align="left"><code dir="auto">string</code></td><td align="left">No</td><td align="left">A brief explanation of the hook’s purpose.</td></tr></tbody></table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="base-input-schema">Base input schema</h2><a class="sl-anchor-link" href="#base-input-schema"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Base input schema”</span></a></div>
+<p>All hooks receive these common fields via <code dir="auto">stdin</code>:</p>
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.me98n.css"><script type="module" src="/_astro/ec.p1z7b.js"></script><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="typescript"><code><div class="ec-line"><div class="code"><span style="--0:#E1DFDF;--1:#292929">{</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"session_id"</span><span style="--0:#E1DFDF;--1:#292929">: string,      </span><span style="--0:#8E8E8E;--1:#686868">// Unique ID for the current session</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"transcript_path"</span><span style="--0:#E1DFDF;--1:#292929">: string, </span><span style="--0:#8E8E8E;--1:#686868">// Absolute path to session transcript JSON</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"cwd"</span><span style="--0:#E1DFDF;--1:#292929">: string,             </span><span style="--0:#8E8E8E;--1:#686868">// Current working directory</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"hook_event_name"</span><span style="--0:#E1DFDF;--1:#292929">: string, </span><span style="--0:#8E8E8E;--1:#686868">// The firing event (e.g. "BeforeTool")</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"timestamp"</span><span style="--0:#E1DFDF;--1:#292929">: string        </span><span style="--0:#8E8E8E;--1:#686868">// ISO 8601 execution time</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1DFDF;--1:#292929">}</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="{  &quot;session_id&quot;: string,      // Unique ID for the current session  &quot;transcript_path&quot;: string, // Absolute path to session transcript JSON  &quot;cwd&quot;: string,             // Current working directory  &quot;hook_event_name&quot;: string, // The firing event (e.g. &quot;BeforeTool&quot;)  &quot;timestamp&quot;: string        // ISO 8601 execution time}"><div></div></button></div></figure></div>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="common-output-fields">Common output fields</h2><a class="sl-anchor-link" href="#common-output-fields"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Common output fields”</span></a></div>
+<p>Most hooks support these fields in their <code dir="auto">stdout</code> JSON:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Field</th><th align="left">Type</th><th align="left">Description</th></tr></thead><tbody><tr><td align="left"><code dir="auto">systemMessage</code></td><td align="left"><code dir="auto">string</code></td><td align="left">Displayed immediately to the user in the terminal.</td></tr><tr><td align="left"><code dir="auto">suppressOutput</code></td><td align="left"><code dir="auto">boolean</code></td><td align="left">If <code dir="auto">true</code>, hides internal hook metadata from logs/telemetry.</td></tr><tr><td align="left"><code dir="auto">continue</code></td><td align="left"><code dir="auto">boolean</code></td><td align="left">If <code dir="auto">false</code>, stops the entire agent loop immediately.</td></tr><tr><td align="left"><code dir="auto">stopReason</code></td><td align="left"><code dir="auto">string</code></td><td align="left">Displayed to the user when <code dir="auto">continue</code> is <code dir="auto">false</code>.</td></tr><tr><td align="left"><code dir="auto">decision</code></td><td align="left"><code dir="auto">string</code></td><td align="left"><code dir="auto">"allow"</code> or <code dir="auto">"deny"</code> (alias <code dir="auto">"block"</code>). Specific impact depends on the event.</td></tr><tr><td align="left"><code dir="auto">reason</code></td><td align="left"><code dir="auto">string</code></td><td align="left">The feedback/error message provided when a <code dir="auto">decision</code> is <code dir="auto">"deny"</code>.</td></tr></tbody></table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="tool-hooks">Tool hooks</h2><a class="sl-anchor-link" href="#tool-hooks"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Tool hooks”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="matchers-and-tool-names">Matchers and tool names</h3><a class="sl-anchor-link" href="#matchers-and-tool-names"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Matchers and tool names”</span></a></div>
+<p>For <code dir="auto">BeforeTool</code> and <code dir="auto">AfterTool</code> events, the <code dir="auto">matcher</code> field in your settings is
+compared against the name of the tool being executed.</p>
+<ul>
+<li><strong>Built-in Tools</strong>: You can match any built-in tool (e.g., <code dir="auto">read_file</code>,
+<code dir="auto">run_shell_command</code>). See the <a href="/docs/tools">Tools Reference</a> for a full list
+of available tool names.</li>
+<li><strong>MCP Tools</strong>: Tools from MCP servers follow the naming pattern
+<code dir="auto">mcp__&lt;server_name&gt;__&lt;tool_name&gt;</code>.</li>
+<li><strong>Regex Support</strong>: Matchers support regular expressions (e.g.,
+<code dir="auto">matcher: "read_.*"</code> matches all file reading tools).</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="beforetool"><code dir="auto">BeforeTool</code></h3><a class="sl-anchor-link" href="#beforetool"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “BeforeTool”</span></a></div>
+<p>Fires before a tool is invoked. Used for argument validation, security checks,
+and parameter rewriting.</p>
+<ul>
+<li><strong>Input Fields</strong>:
+<ul>
+<li><code dir="auto">tool_name</code>: (<code dir="auto">string</code>) The name of the tool being called.</li>
+<li><code dir="auto">tool_input</code>: (<code dir="auto">object</code>) The raw arguments generated by the model.</li>
+<li><code dir="auto">mcp_context</code>: (<code dir="auto">object</code>) Optional metadata for MCP-based tools.</li>
+</ul>
+</li>
+<li><strong>Relevant Output Fields</strong>:
+<ul>
+<li><code dir="auto">decision</code>: Set to <code dir="auto">"deny"</code> (or <code dir="auto">"block"</code>) to prevent the tool from
+executing.</li>
+<li><code dir="auto">reason</code>: Required if denied. This text is sent <strong>to the agent</strong> as a tool
+error, allowing it to respond or retry.</li>
+<li><code dir="auto">hookSpecificOutput.tool_input</code>: An object that <strong>merges with and
+overrides</strong> the model’s arguments before execution.</li>
+<li><code dir="auto">continue</code>: Set to <code dir="auto">false</code> to <strong>kill the entire agent loop</strong> immediately.</li>
+</ul>
+</li>
+<li><strong>Exit Code 2 (Block Tool)</strong>: Prevents execution. Uses <code dir="auto">stderr</code> as the
+<code dir="auto">reason</code> sent to the agent. <strong>The turn continues.</strong></li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="aftertool"><code dir="auto">AfterTool</code></h3><a class="sl-anchor-link" href="#aftertool"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “AfterTool”</span></a></div>
+<p>Fires after a tool executes. Used for result auditing, context injection, or
+hiding sensitive output from the agent.</p>
+<ul>
+<li><strong>Input Fields</strong>:
+<ul>
+<li><code dir="auto">tool_name</code>: (<code dir="auto">string</code>)</li>
+<li><code dir="auto">tool_input</code>: (<code dir="auto">object</code>) The original arguments.</li>
+<li><code dir="auto">tool_response</code>: (<code dir="auto">object</code>) The result containing <code dir="auto">llmContent</code>,
+<code dir="auto">returnDisplay</code>, and optional <code dir="auto">error</code>.</li>
+<li><code dir="auto">mcp_context</code>: (<code dir="auto">object</code>)</li>
+</ul>
+</li>
+<li><strong>Relevant Output Fields</strong>:
+<ul>
+<li><code dir="auto">decision</code>: Set to <code dir="auto">"deny"</code> to hide the real tool output from the agent.</li>
+<li><code dir="auto">reason</code>: Required if denied. This text <strong>replaces</strong> the tool result sent
+back to the model.</li>
+<li><code dir="auto">hookSpecificOutput.additionalContext</code>: Text that is <strong>appended</strong> to the
+tool result for the agent.</li>
+<li><code dir="auto">continue</code>: Set to <code dir="auto">false</code> to <strong>kill the entire agent loop</strong> immediately.</li>
+</ul>
+</li>
+<li><strong>Exit Code 2 (Block Result)</strong>: Hides the tool result. Uses <code dir="auto">stderr</code> as the
+replacement content sent to the agent. <strong>The turn continues.</strong></li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="agent-hooks">Agent hooks</h2><a class="sl-anchor-link" href="#agent-hooks"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Agent hooks”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="beforeagent"><code dir="auto">BeforeAgent</code></h3><a class="sl-anchor-link" href="#beforeagent"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “BeforeAgent”</span></a></div>
+<p>Fires after a user submits a prompt, but before the agent begins planning. Used
+for prompt validation or injecting dynamic context.</p>
+<ul>
+<li><strong>Input Fields</strong>:
+<ul>
+<li><code dir="auto">prompt</code>: (<code dir="auto">string</code>) The original text submitted by the user.</li>
+</ul>
+</li>
+<li><strong>Relevant Output Fields</strong>:
+<ul>
+<li><code dir="auto">hookSpecificOutput.additionalContext</code>: Text that is <strong>appended</strong> to the
+prompt for this turn only.</li>
+<li><code dir="auto">decision</code>: Set to <code dir="auto">"deny"</code> to block the turn and <strong>discard the user’s
+message</strong> (it will not appear in history).</li>
+<li><code dir="auto">continue</code>: Set to <code dir="auto">false</code> to block the turn but <strong>save the message to
+history</strong>.</li>
+<li><code dir="auto">reason</code>: Required if denied or stopped.</li>
+</ul>
+</li>
+<li><strong>Exit Code 2 (Block Turn)</strong>: Aborts the turn and erases the prompt from
+context. Same as <code dir="auto">decision: "deny"</code>.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="afteragent"><code dir="auto">AfterAgent</code></h3><a class="sl-anchor-link" href="#afteragent"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “AfterAgent”</span></a></div>
+<p>Fires once per turn after the model generates its final response. Primary use
+case is response validation and automatic retries.</p>
+<ul>
+<li><strong>Input Fields</strong>:
+<ul>
+<li><code dir="auto">prompt</code>: (<code dir="auto">string</code>) The user’s original request.</li>
+<li><code dir="auto">prompt_response</code>: (<code dir="auto">string</code>) The final text generated by the agent.</li>
+<li><code dir="auto">stop_hook_active</code>: (<code dir="auto">boolean</code>) Indicates if this hook is already running as
+part of a retry sequence.</li>
+</ul>
+</li>
+<li><strong>Relevant Output Fields</strong>:
+<ul>
+<li><code dir="auto">decision</code>: Set to <code dir="auto">"deny"</code> to <strong>reject the response</strong> and force a retry.</li>
+<li><code dir="auto">reason</code>: Required if denied. This text is sent <strong>to the agent as a new
+prompt</strong> to request a correction.</li>
+<li><code dir="auto">continue</code>: Set to <code dir="auto">false</code> to <strong>stop the session</strong> without retrying.</li>
+<li><code dir="auto">hookSpecificOutput.clearContext</code>: If <code dir="auto">true</code>, clears conversation history
+(LLM memory) while preserving UI display.</li>
+</ul>
+</li>
+<li><strong>Exit Code 2 (Retry)</strong>: Rejects the response and triggers an automatic retry
+turn using <code dir="auto">stderr</code> as the feedback prompt.</li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="model-hooks">Model hooks</h2><a class="sl-anchor-link" href="#model-hooks"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Model hooks”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="beforemodel"><code dir="auto">BeforeModel</code></h3><a class="sl-anchor-link" href="#beforemodel"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “BeforeModel”</span></a></div>
+<p>Fires before sending a request to the LLM. Operates on a stable, SDK-agnostic
+request format.</p>
+<ul>
+<li><strong>Input Fields</strong>:
+<ul>
+<li><code dir="auto">llm_request</code>: (<code dir="auto">object</code>) Contains <code dir="auto">model</code>, <code dir="auto">messages</code>, and <code dir="auto">config</code>
+(generation params).</li>
+</ul>
+</li>
+<li><strong>Relevant Output Fields</strong>:
+<ul>
+<li><code dir="auto">hookSpecificOutput.llm_request</code>: An object that <strong>overrides</strong> parts of the
+outgoing request (e.g., changing models or temperature).</li>
+<li><code dir="auto">hookSpecificOutput.llm_response</code>: A <strong>Synthetic Response</strong> object. If
+provided, the CLI skips the LLM call entirely and uses this as the response.</li>
+<li><code dir="auto">decision</code>: Set to <code dir="auto">"deny"</code> to block the request and abort the turn.</li>
+</ul>
+</li>
+<li><strong>Exit Code 2 (Block Turn)</strong>: Aborts the turn and skips the LLM call. Uses
+<code dir="auto">stderr</code> as the error message.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="beforetoolselection"><code dir="auto">BeforeToolSelection</code></h3><a class="sl-anchor-link" href="#beforetoolselection"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “BeforeToolSelection”</span></a></div>
+<p>Fires before the LLM decides which tools to call. Used to filter the available
+toolset or force specific tool modes.</p>
+<ul>
+<li><strong>Input Fields</strong>:
+<ul>
+<li><code dir="auto">llm_request</code>: (<code dir="auto">object</code>) Same format as <code dir="auto">BeforeModel</code>.</li>
+</ul>
+</li>
+<li><strong>Relevant Output Fields</strong>:
+<ul>
+<li><code dir="auto">hookSpecificOutput.toolConfig.mode</code>: (<code dir="auto">"AUTO" | "ANY" | "NONE"</code>)
+<ul>
+<li><code dir="auto">"NONE"</code>: Disables all tools (Wins over other hooks).</li>
+<li><code dir="auto">"ANY"</code>: Forces at least one tool call.</li>
+</ul>
+</li>
+<li><code dir="auto">hookSpecificOutput.toolConfig.allowedFunctionNames</code>: (<code dir="auto">string[]</code>) Whitelist
+of tool names.</li>
+</ul>
+</li>
+<li><strong>Union Strategy</strong>: Multiple hooks’ whitelists are <strong>combined</strong>.</li>
+<li><strong>Limitations</strong>: Does <strong>not</strong> support <code dir="auto">decision</code>, <code dir="auto">continue</code>, or
+<code dir="auto">systemMessage</code>.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="aftermodel"><code dir="auto">AfterModel</code></h3><a class="sl-anchor-link" href="#aftermodel"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “AfterModel”</span></a></div>
+<p>Fires immediately after an LLM response chunk is received. Used for real-time
+redaction or PII filtering.</p>
+<ul>
+<li><strong>Input Fields</strong>:
+<ul>
+<li><code dir="auto">llm_request</code>: (<code dir="auto">object</code>) The original request.</li>
+<li><code dir="auto">llm_response</code>: (<code dir="auto">object</code>) The model’s response (or a single chunk during
+streaming).</li>
+</ul>
+</li>
+<li><strong>Relevant Output Fields</strong>:
+<ul>
+<li><code dir="auto">hookSpecificOutput.llm_response</code>: An object that <strong>replaces</strong> the model’s
+response chunk.</li>
+<li><code dir="auto">decision</code>: Set to <code dir="auto">"deny"</code> to discard the response chunk and block the
+turn.</li>
+<li><code dir="auto">continue</code>: Set to <code dir="auto">false</code> to <strong>kill the entire agent loop</strong> immediately.</li>
+</ul>
+</li>
+<li><strong>Note on Streaming</strong>: Fired for <strong>every chunk</strong> generated by the model.
+Modifying the response only affects the current chunk.</li>
+<li><strong>Exit Code 2 (Block Response)</strong>: Aborts the turn and discards the model’s
+output. Uses <code dir="auto">stderr</code> as the error message.</li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="lifecycle--system-hooks">Lifecycle &amp; system hooks</h2><a class="sl-anchor-link" href="#lifecycle--system-hooks"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Lifecycle &amp; system hooks”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="sessionstart"><code dir="auto">SessionStart</code></h3><a class="sl-anchor-link" href="#sessionstart"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “SessionStart”</span></a></div>
+<p>Fires on application startup, resuming a session, or after a <code dir="auto">/clear</code> command.
+Used for loading initial context.</p>
+<ul>
+<li><strong>Input fields</strong>:
+<ul>
+<li><code dir="auto">source</code>: (<code dir="auto">"startup" | "resume" | "clear"</code>)</li>
+</ul>
+</li>
+<li><strong>Relevant output fields</strong>:
+<ul>
+<li><code dir="auto">hookSpecificOutput.additionalContext</code>: (<code dir="auto">string</code>)
+<ul>
+<li><strong>Interactive</strong>: Injected as the first turn in history.</li>
+<li><strong>Non-interactive</strong>: Prepended to the user’s prompt.</li>
+</ul>
+</li>
+<li><code dir="auto">systemMessage</code>: Shown at the start of the session.</li>
+</ul>
+</li>
+<li><strong>Advisory only</strong>: <code dir="auto">continue</code> and <code dir="auto">decision</code> fields are <strong>ignored</strong>. Startup
+is never blocked.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="sessionend"><code dir="auto">SessionEnd</code></h3><a class="sl-anchor-link" href="#sessionend"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “SessionEnd”</span></a></div>
+<p>Fires when the CLI exits or a session is cleared. Used for cleanup or final
+telemetry.</p>
+<ul>
+<li><strong>Input Fields</strong>:
+<ul>
+<li><code dir="auto">reason</code>: (<code dir="auto">"exit" | "clear" | "logout" | "prompt_input_exit" | "other"</code>)</li>
+</ul>
+</li>
+<li><strong>Relevant Output Fields</strong>:
+<ul>
+<li><code dir="auto">systemMessage</code>: Displayed to the user during shutdown.</li>
+</ul>
+</li>
+<li><strong>Best Effort</strong>: The CLI <strong>will not wait</strong> for this hook to complete and
+ignores all flow-control fields (<code dir="auto">continue</code>, <code dir="auto">decision</code>).</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="notification"><code dir="auto">Notification</code></h3><a class="sl-anchor-link" href="#notification"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Notification”</span></a></div>
+<p>Fires when the CLI emits a system alert (e.g., Tool Permissions). Used for
+external logging or cross-platform alerts.</p>
+<ul>
+<li><strong>Input Fields</strong>:
+<ul>
+<li><code dir="auto">notification_type</code>: (<code dir="auto">"ToolPermission"</code>)</li>
+<li><code dir="auto">message</code>: Summary of the alert.</li>
+<li><code dir="auto">details</code>: JSON object with alert-specific metadata (e.g., tool name, file
+path).</li>
+</ul>
+</li>
+<li><strong>Relevant Output Fields</strong>:
+<ul>
+<li><code dir="auto">systemMessage</code>: Displayed alongside the system alert.</li>
+</ul>
+</li>
+<li><strong>Observability Only</strong>: This hook <strong>cannot</strong> block alerts or grant permissions
+automatically. Flow-control fields are ignored.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="precompress"><code dir="auto">PreCompress</code></h3><a class="sl-anchor-link" href="#precompress"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “PreCompress”</span></a></div>
+<p>Fires before the CLI summarizes history to save tokens. Used for logging or
+state saving.</p>
+<ul>
+<li><strong>Input Fields</strong>:
+<ul>
+<li><code dir="auto">trigger</code>: (<code dir="auto">"auto" | "manual"</code>)</li>
+</ul>
+</li>
+<li><strong>Relevant Output Fields</strong>:
+<ul>
+<li><code dir="auto">systemMessage</code>: Displayed to the user before compression.</li>
+</ul>
+</li>
+<li><strong>Advisory Only</strong>: Fired asynchronously. It <strong>cannot</strong> block or modify the
+compression process. Flow-control fields are ignored.</li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="stable-model-api">Stable Model API</h2><a class="sl-anchor-link" href="#stable-model-api"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Stable Model API”</span></a></div>
+<p>Gemini CLI uses these structures to ensure hooks don’t break across SDK updates.</p>
+<p><strong>LLMRequest</strong>:</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="typescript"><code><div class="ec-line"><div class="code"><span style="--0:#E1DFDF;--1:#292929">{</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"model"</span><span style="--0:#E1DFDF;--1:#292929">: string,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"messages"</span><span style="--0:#E1DFDF;--1:#292929">: </span><span style="--0:#BD9CFE;--1:#6F4CDE">Array</span><span style="--0:#E1DFDF;--1:#292929">&lt;{</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#77D5A3;--1:#007847">"role"</span><span style="--0:#FD8DA3;--1:#C12F57">:</span><span style="--0:#E1DFDF;--1:#292929"> </span><span style="--0:#77D5A3;--1:#007847">"user"</span><span style="--0:#E1DFDF;--1:#292929"> </span><span style="--0:#FD8DA3;--1:#C12F57">|</span><span style="--0:#E1DFDF;--1:#292929"> </span><span style="--0:#77D5A3;--1:#007847">"model"</span><span style="--0:#E1DFDF;--1:#292929"> </span><span style="--0:#FD8DA3;--1:#C12F57">|</span><span style="--0:#E1DFDF;--1:#292929"> </span><span style="--0:#77D5A3;--1:#007847">"system"</span><span style="--0:#E1DFDF;--1:#292929">,</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#77D5A3;--1:#007847">"content"</span><span style="--0:#FD8DA3;--1:#C12F57">:</span><span style="--0:#E1DFDF;--1:#292929"> </span><span style="--0:#8DA8FF;--1:#3252B8">string</span><span style="--0:#E1DFDF;--1:#292929"> </span><span style="--0:#8E8E8E;--1:#686868">// Non-text parts are filtered out for hooks</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1DFDF;--1:#292929">  </span></span><span style="--0:#E1DFDF;--1:#292929">}&gt;,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"config"</span><span style="--0:#E1DFDF;--1:#292929">: { </span><span style="--0:#77D5A3;--1:#007847">"temperature"</span><span style="--0:#E1DFDF;--1:#292929">: number, </span><span style="--0:#FD8DA3;--1:#C12F57">...</span><span style="--0:#E1DFDF;--1:#292929"> },</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"toolConfig"</span><span style="--0:#E1DFDF;--1:#292929">: { </span><span style="--0:#77D5A3;--1:#007847">"mode"</span><span style="--0:#E1DFDF;--1:#292929">: string, </span><span style="--0:#77D5A3;--1:#007847">"allowedFunctionNames"</span><span style="--0:#E1DFDF;--1:#292929">: string[] }</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1DFDF;--1:#292929">}</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="{  &quot;model&quot;: string,  &quot;messages&quot;: Array&lt;{    &quot;role&quot;: &quot;user&quot; | &quot;model&quot; | &quot;system&quot;,    &quot;content&quot;: string // Non-text parts are filtered out for hooks  }&gt;,  &quot;config&quot;: { &quot;temperature&quot;: number, ... },  &quot;toolConfig&quot;: { &quot;mode&quot;: string, &quot;allowedFunctionNames&quot;: string[] }}"><div></div></button></div></figure></div>
+<p><strong>LLMResponse</strong>:</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="typescript"><code><div class="ec-line"><div class="code"><span style="--0:#E1DFDF;--1:#292929">{</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"candidates"</span><span style="--0:#E1DFDF;--1:#292929">: </span><span style="--0:#BD9CFE;--1:#6F4CDE">Array</span><span style="--0:#E1DFDF;--1:#292929">&lt;{</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#77D5A3;--1:#007847">"content"</span><span style="--0:#FD8DA3;--1:#C12F57">:</span><span style="--0:#E1DFDF;--1:#292929"> { </span><span style="--0:#77D5A3;--1:#007847">"role"</span><span style="--0:#FD8DA3;--1:#C12F57">:</span><span style="--0:#E1DFDF;--1:#292929"> </span><span style="--0:#77D5A3;--1:#007847">"model"</span><span style="--0:#E1DFDF;--1:#292929">, </span><span style="--0:#77D5A3;--1:#007847">"parts"</span><span style="--0:#FD8DA3;--1:#C12F57">:</span><span style="--0:#E1DFDF;--1:#292929"> </span><span style="--0:#8DA8FF;--1:#3252B8">string</span><span style="--0:#E1DFDF;--1:#292929">[] },</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#77D5A3;--1:#007847">"finishReason"</span><span style="--0:#FD8DA3;--1:#C12F57">:</span><span style="--0:#E1DFDF;--1:#292929"> </span><span style="--0:#8DA8FF;--1:#3252B8">string</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1DFDF;--1:#292929">  </span></span><span style="--0:#E1DFDF;--1:#292929">}&gt;,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#77D5A3;--1:#007847">"usageMetadata"</span><span style="--0:#E1DFDF;--1:#292929">: { </span><span style="--0:#77D5A3;--1:#007847">"totalTokenCount"</span><span style="--0:#E1DFDF;--1:#292929">: number }</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1DFDF;--1:#292929">}</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="{  &quot;candidates&quot;: Array&lt;{    &quot;content&quot;: { &quot;role&quot;: &quot;model&quot;, &quot;parts&quot;: string[] },    &quot;finishReason&quot;: string  }&gt;,  &quot;usageMetadata&quot;: { &quot;totalTokenCount&quot;: number }}"><div></div></button></div></figure></div> </div>  </div> </div>   </main> </div> </div>   </div> <div id="cookie-notice-wrapper" class="astro-uz2wdcl7"> <div class="cookie-notice-container fixed bottom-0 left-0 right-0 flex justify-center z-50 astro-uz2wdcl7"> <div class="cookie-notice text-sm dark:bg-black/50 bg-white/50 backdrop-blur-sm m-2 p-3 rounded-lg flex max-sm:flex-col items-center border border-black/20 astro-uz2wdcl7"> <div class="mr-2 astro-uz2wdcl7">
+This website uses <a href="https://policies.google.com/technologies/cookies" class="underline text-black/70 dark:text-white/70 astro-uz2wdcl7" target="_blank">cookies</a> from Google to deliver and enhance the quality of its services and to analyze
+        traffic.
+</div> <button id="cookie-ack-button" class="font-bold text-nowrap px-2 py-1 border rounded dark:bg-black/80 dark:text-white/70 dark:border-white/30 border-black/20 astro-uz2wdcl7">
+I understand.
+</button> </div> </div> </div> <script type="module">const e=document.getElementById("cookie-notice-wrapper"),t="__cookieAck";e&&localStorage.getItem(t)!=="true"&&e.classList.remove("hidden");const o=document.getElementById("cookie-ack-button");o?.addEventListener("click",()=>{localStorage.setItem(t,"true"),e&&(e.style.display="none")});</script>  <!-- Footer at bottom of .page flex container --> <footer class="site-footer astro-yriad4ts theme-aware astro-sz7xmlte"> <div class="footer-content astro-sz7xmlte"> <div class="logos astro-sz7xmlte"> <img class="logo-light astro-sz7xmlte" src="/assets/Google.svg" alt="Google logo" width="64.216" height="21"> <img class="logo-dark astro-sz7xmlte" src="/assets/Google-dark.svg" alt="Google logo" width="64.216" height="21"> <img class="logo-light fordev-logo astro-sz7xmlte" src="/assets/fordevelopers.svg" alt="For Developers logo" width="122.678" height="17.583"> <img class="logo-dark fordev-logo astro-sz7xmlte" src="/assets/fordevelopers-dark.svg" alt="For Developers logo" width="122.678" height="17.583"> </div> <div class="footer-links astro-sz7xmlte"> <a href="/terms" class="tos-link astro-sz7xmlte" target="_blank" rel="noopener noreferrer">Terms</a> <span class="divider astro-sz7xmlte">|</span> <a href="https://policies.google.com/privacy" class="tos-link astro-sz7xmlte" target="_blank" rel="noopener noreferrer">Privacy</a> </div> </div> </footer>  </div>  </body></html>

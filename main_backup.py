@@ -123,7 +123,7 @@ async def process_url(request: ProcessUrlRequest):
                 with open(md_path, "w", encoding="utf-8") as f: f.write(markdown_text)
             except: pass
 
-        ai_data = await logic.analyze_markdown_content(markdown_text, fire=request.fire) if markdown_text else {"summary": "", "categories": []}
+        ai_data = await logic.analyze_markdown_content(markdown_text) if markdown_text else {"summary": "", "categories": []}
         
         # Uploads
         paths = {"img": f"temp/{unique_id}.png", "html": f"temp/{unique_id}.html", "md": f"temp/{unique_id}.md"}
@@ -333,7 +333,7 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
         old_summary = last_summary_data['content'] if last_summary_data else "Начало проекта."
         current_iteration = last_summary_data['iteration'] if last_summary_data else 0
 
-        summary_new_body = await logic.regenerate_new_summary(old_summary, history_for_ai, data.project_path, fire=data.fire)
+        summary_new_body = await logic.regenerate_new_summary(old_summary, history_for_ai, data.project_path)
 
         dt = datetime.now()
         formatted = dt.strftime("%H:%M:%S %d.%m.%Y")

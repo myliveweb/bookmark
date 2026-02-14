@@ -1,0 +1,91 @@
+
+> dev
+> nuxt dev
+
+│
+●  Nuxt 4.3.0 (with Nitro 2.13.1, Vite 7.3.1 and Vue 3.5.27)
+
+  ➜ Local:    http://localhost:3000/
+  ➜ Network:  use --host to expose
+
+[nuxt:tailwindcss] ℹ Using Tailwind CSS from ~/assets/css/tailwind.css
+  ➜ DevTools: press Shift + Alt + D in the browser (v3.1.1)
+
+
+[nuxt]  WARN  Two component files resolving to the same name Badge:
+
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/badge/index.ts
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/badge/Badge.vue
+
+
+[nuxt]  WARN  Two component files resolving to the same name Button:
+
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/button/index.ts
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/button/Button.vue
+
+
+[nuxt]  WARN  Two component files resolving to the same name Card:
+
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/card/index.ts
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/card/Card.vue
+
+
+[nuxt]  WARN  Two component files resolving to the same name Input:
+
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/input/index.ts
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/input/Input.vue
+
+
+[nuxt]  WARN  Two component files resolving to the same name Label:
+
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/label/index.ts
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/label/Label.vue
+
+
+[nuxt]  WARN  Two component files resolving to the same name NavigationMenu:
+
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/navigation-menu/index.ts
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/navigation-menu/NavigationMenu.vue
+
+
+[nuxt]  WARN  Two component files resolving to the same name Pagination:
+
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/pagination/index.ts
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/pagination/Pagination.vue
+
+
+[nuxt]  WARN  Two component files resolving to the same name Popover:
+
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/popover/index.ts
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/popover/Popover.vue
+
+
+[nuxt]  WARN  Two component files resolving to the same name Textarea:
+
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/textarea/index.ts
+ - /home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/textarea/Textarea.vue
+
+✔ Vite client built in 90ms
+✔ Vite server built in 348ms
+[nitro] ✔ Nuxt Nitro server built in 2924ms
+ℹ Vite server warmed up in 2ms
+ℹ Vite client warmed up in 5ms
+WARN  [Vue Router warn]: uncaught error during route navigation:
+ERROR  { [Error: [@vue/compiler-sfc] Failed to load TypeScript, which is required for resolving imported types. Please make sure "TypeScript" is installed as a project dependency.
+
+/home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/popover/Popover.vue
+3  |  import { PopoverRoot, useForwardPropsEmits } from "reka-ui"
+4  |  
+5  |  const props = defineProps<PopoverRootProps>()
+   |                            ^^^^^^^^^^^^^^^^
+6  |  const emits = defineEmits<PopoverRootEmits>()
+7  |  ]
+  data:
+   { code: 'VITE_ERROR',
+     id: '/components/ui/popover/Popover.vue',
+     stack:
+      'Error: [@vue/compiler-sfc] Failed to load TypeScript, which is required for resolving imported types. Please make sure "TypeScript" is installed as a project dependency.\n\n/home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/popover/Popover.vue\n3  |  import { PopoverRoot, useForwardPropsEmits } from "reka-ui"\n4  |  \n5  |  const props = defineProps<PopoverRootProps>()\n   |                            ^^^^^^^^^^^^^^^^\n6  |  const emits = defineEmits<PopoverRootEmits>()\n7  |  \n    at ScriptCompileContext.error (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:19785:11)\n    at importSourceToScope (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22639:16)\n    at resolveTypeFromImport (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22631:23)\n    at innerResolveTypeReference (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22518:14)\n    at resolveTypeReference (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22506:20)\n    at innerResolveTypeElements (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22093:24)\n    at resolveTypeElements (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22033:20)\n    at resolveRuntimePropsFromType (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:23786:20)\n    at extractRuntimeProps (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:23762:17)\n    at genRuntimeProps (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:23750:18)',
+     message:
+      '[@vue/compiler-sfc] Failed to load TypeScript, which is required for resolving imported types. Please make sure "TypeScript" is installed as a project dependency.\n\n/home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/popover/Popover.vue\n3  |  import { PopoverRoot, useForwardPropsEmits } from "reka-ui"\n4  |  \n5  |  const props = defineProps<PopoverRootProps>()\n   |                            ^^^^^^^^^^^^^^^^\n6  |  const emits = defineEmits<PopoverRootEmits>()\n7  |  ' },
+  status: undefined,
+  statusCode: undefined }

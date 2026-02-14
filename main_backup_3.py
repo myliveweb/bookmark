@@ -10,8 +10,6 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
-from dotenv import load_dotenv # Добавляем загрузку .env
-from llm.model import initialize_llm_providers # Добавляем импорт функции инициализации
 
 import backend_logic as logic
 from models import (
@@ -21,19 +19,8 @@ from models import (
     RegenerateSummaryRequest
 )
 
-load_dotenv() # Загружаем переменные окружения
-
-# Получаем порядок провайдеров из .env
-LLM_PROVIDER_ORDER = os.getenv("LLM_PROVIDER_ORDER", "ollama,groq,openrouter")
-
 # Инициализация FastAPI
 app = FastAPI(title="Bookmark Manager")
-
-@app.on_event("startup")
-async def startup_event():
-    logger.info("Приложение FastAPI запускается...")
-    await initialize_llm_providers(LLM_PROVIDER_ORDER)
-    logger.info("Приложение FastAPI запущено.")
 
 # Настройка CORS
 app.add_middleware(
@@ -123,7 +110,7 @@ async def process_url(request: ProcessUrlRequest):
                 with open(md_path, "w", encoding="utf-8") as f: f.write(markdown_text)
             except: pass
 
-        ai_data = await logic.analyze_markdown_content(markdown_text, fire=request.fire) if markdown_text else {"summary": "", "categories": []}
+        ai_data = await logic.analyze_markdown_content(markdown_text) if markdown_text else {"summary": "", "categories": []}
         
         # Uploads
         paths = {"img": f"temp/{unique_id}.png", "html": f"temp/{unique_id}.html", "md": f"temp/{unique_id}.md"}
@@ -240,8 +227,8 @@ async def delete_bookmark(id: int):
 @app.post("/api/regenerate_summary")
 async def regen_summary(request: RegenerateSummaryRequest, background_tasks: BackgroundTasks):
     print(f"last_turn: {request.last_turn}, regenerate_num: {request.regenerate_num}, project_path: {request.project_path}")
-    # print("Временно приостановлено из за окончания лимитов Ollama.")
-    # return {"status": "accepted", "info": "Временно приостановлено из за окончания лимитов Ollama."}
+    print("Временно приостановлено из за окончания лимитов Ollama.")
+    return {"status": "accepted", "info": "Временно приостановлено из за окончания лимитов Ollama."}
     
     # Start the background task
     background_tasks.add_task(regen_summary_task, request)
@@ -291,13 +278,14 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
             for item in clean_summary_list[:-data.last_turn]:
                 summary_last.append(item)
 
-        # 2. Достаем все сообщения, которые еще НЕ сжаты
+        # 2. Достаем 50 сообщений, которые еще НЕ сжаты
         # Используем фильтр по пути и флагу summarized
         history_res = logic.supabase.table('chat_history') \
-            .select('id', 'created_at', 'role', 'content') \
+            .select('id', 'role', 'content') \
             .eq('metadata->>cwd', data.project_path) \
             .eq('summarized', False) \
             .order('created_at') \
+            .limit(data.regenerate_num * 2) \
             .execute()
 
         rows = history_res.data
@@ -305,22 +293,27 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
         if len(rows) < data.last_turn * 2:
             return {"status": "too few records to summarize", "count": len(rows)}
 
-        date_last = None
         # Формируем текст истории для LLM
         history_for_ai = ""
         processed_ids = []
-        for r in rows[-data.regenerate_num*2:-data.last_turn*2]:
+        for r in rows[:-data.last_turn * 2]:
             role = "USER" if r['role'] == 'user' else "ASSISTANT"
             history_for_ai += f"{role}: {r['content']}\n"
             processed_ids.append(r['id'])
-            date_last = r['created_at']
 
         n = 0
         for row in processed_ids:
             n += 1
             print(f"{n}: {row}")
 
-        print(date_last)
+        summary_new = '\n'.join(summary_last)
+
+        with open(summary_file, "r", encoding='utf-8') as f:
+            summary_old_data = f.read()
+
+        if summary_old_data:
+            item_list = summary_old_data.split(' ------')
+            summary_old_text = item_list[1].strip()
 
         summary_res = logic.supabase.table('project_summaries') \
             .select('content', 'iteration') \
@@ -333,10 +326,17 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
         old_summary = last_summary_data['content'] if last_summary_data else "Начало проекта."
         current_iteration = last_summary_data['iteration'] if last_summary_data else 0
 
-        summary_new_body = await logic.regenerate_new_summary(old_summary, history_for_ai, data.project_path, fire=data.fire)
+        summary_new_body = await logic.regenerate_new_summary(old_summary, history_for_ai, data.project_path)
 
         dt = datetime.now()
         formatted = dt.strftime("%H:%M:%S %d.%m.%Y")
+
+        summary_out = ''
+        summary_out += f'------ {formatted} ------\n\n'
+        summary_out += summary_new_body
+
+        with open(".gemini/hooks/history/summary_test_5.md", "w") as f:
+            f.write(summary_out.strip())
 
         # 4. INSERT новой итерации (Immutable)
         new_iteration = current_iteration + 1
@@ -354,7 +354,7 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
         # 5. Обновляем флаг summarized в chat_history
         logic.supabase.table('chat_history').update({
             "summarized": True
-        }).lte('created_at', date_last).execute()
+        }).in_('id', processed_ids).execute()
 
     except Exception as e:
         # Запись в лог, чтобы отслеживать причины ошибок

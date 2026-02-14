@@ -5,13 +5,11 @@ import json
 from typing import List
 from datetime import datetime
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
-from dotenv import load_dotenv # Добавляем загрузку .env
-from llm.model import initialize_llm_providers # Добавляем импорт функции инициализации
 
 import backend_logic as logic
 from models import (
@@ -21,19 +19,8 @@ from models import (
     RegenerateSummaryRequest
 )
 
-load_dotenv() # Загружаем переменные окружения
-
-# Получаем порядок провайдеров из .env
-LLM_PROVIDER_ORDER = os.getenv("LLM_PROVIDER_ORDER", "ollama,groq,openrouter")
-
 # Инициализация FastAPI
 app = FastAPI(title="Bookmark Manager")
-
-@app.on_event("startup")
-async def startup_event():
-    logger.info("Приложение FastAPI запускается...")
-    await initialize_llm_providers(LLM_PROVIDER_ORDER)
-    logger.info("Приложение FastAPI запущено.")
 
 # Настройка CORS
 app.add_middleware(
@@ -123,7 +110,7 @@ async def process_url(request: ProcessUrlRequest):
                 with open(md_path, "w", encoding="utf-8") as f: f.write(markdown_text)
             except: pass
 
-        ai_data = await logic.analyze_markdown_content(markdown_text, fire=request.fire) if markdown_text else {"summary": "", "categories": []}
+        ai_data = await logic.analyze_markdown_content(markdown_text) if markdown_text else {"summary": "", "categories": []}
         
         # Uploads
         paths = {"img": f"temp/{unique_id}.png", "html": f"temp/{unique_id}.html", "md": f"temp/{unique_id}.md"}
@@ -162,70 +149,6 @@ def finalize_bookmark(request: FinalizeBookmarkRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/api/bookmarks/import")
-async def import_bookmarks(file: UploadFile = File(...)):
-    """Массовый импорт закладок из HTML-файла."""
-    try:
-        content = await file.read()
-        html_text = content.decode('utf-8', errors='ignore')
-        
-        # 1. Парсим ссылки из HTML (Разработка и Полезное)
-        extracted_links = logic.parse_chrome_bookmarks(html_text)
-        if not extracted_links:
-            return {"status": "success", "added": 0, "message": "No links found in target folders"}
-            
-        # 2. Получаем существующие URL, чтобы избежать дублей
-        existing_res = logic.supabase.table("bookmarks").select("url").execute()
-        existing_urls = {r["url"] for r in existing_res.data} if existing_res.data else set()
-        
-        # 3. Фильтруем новые
-        to_insert = []
-        for item in extracted_links:
-            if item["url"] not in existing_urls:
-                to_insert.append({
-                    "url": item["url"],
-                    "title": item["title"],
-                    "date_add": item["add_date"],
-                    "is_processed": False
-                })
-        
-        # 4. Bulk Insert (пачками по 100)
-        if to_insert:
-            batch_size = 100
-            for i in range(0, len(to_insert), batch_size):
-                batch = to_insert[i:i + batch_size]
-                logic.supabase.table("bookmarks").insert(batch).execute()
-        
-        return {"status": "success", "added": len(to_insert), "total_found": len(extracted_links)}
-    except Exception as e:
-        logger.error(f"Import Error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/api/system/conveyor-status")
-def get_conveyor_status():
-    """Возвращает статистику обработки для индикатора прогресса."""
-    try:
-        # Всего
-        total_res = logic.supabase.table("bookmarks").select("id", count="exact").execute()
-        total_count = total_res.count if total_res.count is not None else 0
-        
-        # Обработано
-        proc_res = logic.supabase.table("bookmarks").select("id", count="exact").eq("is_processed", True).execute()
-        proc_count = proc_res.count if proc_res.count is not None else 0
-        
-        # Ошибки
-        err_res = logic.supabase.table("bookmarks").select("id", count="exact").not_.is_("processing_error", "null").execute()
-        err_count = err_res.count if err_res.count is not None else 0
-        
-        return {
-            "total": total_count,
-            "processed": proc_count,
-            "errors": err_count
-        }
-    except Exception as e:
-        logger.error(f"Status Error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
 @app.delete("/api/bookmarks/{id}")
 async def delete_bookmark(id: int):
     try:
@@ -239,10 +162,6 @@ async def delete_bookmark(id: int):
 # Джин не трогай этот ендпойнт, ето писал Босс, ему это нужно
 @app.post("/api/regenerate_summary")
 async def regen_summary(request: RegenerateSummaryRequest, background_tasks: BackgroundTasks):
-    print(f"last_turn: {request.last_turn}, regenerate_num: {request.regenerate_num}, project_path: {request.project_path}")
-    # print("Временно приостановлено из за окончания лимитов Ollama.")
-    # return {"status": "accepted", "info": "Временно приостановлено из за окончания лимитов Ollama."}
-    
     # Start the background task
     background_tasks.add_task(regen_summary_task, request)
     
@@ -252,6 +171,10 @@ async def regen_summary(request: RegenerateSummaryRequest, background_tasks: Bac
 # Джин не трогай эту функцию, ето писал Босс, ему это нужно
 async def regen_summary_task(data: RegenerateSummaryRequest):
     try:
+        print(f"last_turn: {data.last_turn}")
+        print(f"regenerate_num: {data.regenerate_num}")
+        print(f"project_path: {data.project_path}")
+
         history_file = ".gemini/hooks/history/last.md"
         summary_file = ".gemini/hooks/history/summary.md"
 
@@ -291,13 +214,14 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
             for item in clean_summary_list[:-data.last_turn]:
                 summary_last.append(item)
 
-        # 2. Достаем все сообщения, которые еще НЕ сжаты
+        # 2. Достаем 50 сообщений, которые еще НЕ сжаты
         # Используем фильтр по пути и флагу summarized
         history_res = logic.supabase.table('chat_history') \
-            .select('id', 'created_at', 'role', 'content') \
+            .select('id', 'role', 'content') \
             .eq('metadata->>cwd', data.project_path) \
             .eq('summarized', False) \
             .order('created_at') \
+            .limit(data.regenerate_num * 2) \
             .execute()
 
         rows = history_res.data
@@ -305,22 +229,27 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
         if len(rows) < data.last_turn * 2:
             return {"status": "too few records to summarize", "count": len(rows)}
 
-        date_last = None
         # Формируем текст истории для LLM
         history_for_ai = ""
         processed_ids = []
-        for r in rows[-data.regenerate_num*2:-data.last_turn*2]:
+        for r in rows[:-data.last_turn * 2]:
             role = "USER" if r['role'] == 'user' else "ASSISTANT"
             history_for_ai += f"{role}: {r['content']}\n"
             processed_ids.append(r['id'])
-            date_last = r['created_at']
 
         n = 0
         for row in processed_ids:
             n += 1
             print(f"{n}: {row}")
 
-        print(date_last)
+        summary_new = '\n'.join(summary_last)
+
+        with open(summary_file, "r", encoding='utf-8') as f:
+            summary_old_data = f.read()
+
+        if summary_old_data:
+            item_list = summary_old_data.split(' ------')
+            summary_old_text = item_list[1].strip()
 
         summary_res = logic.supabase.table('project_summaries') \
             .select('content', 'iteration') \
@@ -333,10 +262,17 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
         old_summary = last_summary_data['content'] if last_summary_data else "Начало проекта."
         current_iteration = last_summary_data['iteration'] if last_summary_data else 0
 
-        summary_new_body = await logic.regenerate_new_summary(old_summary, history_for_ai, data.project_path, fire=data.fire)
+        summary_new_body = await logic.regenerate_new_summary(old_summary, history_for_ai, data.project_path)
 
         dt = datetime.now()
         formatted = dt.strftime("%H:%M:%S %d.%m.%Y")
+
+        summary_out = ''
+        summary_out += f'------ {formatted} ------\n\n'
+        summary_out += summary_new_body
+
+        with open(".gemini/hooks/history/summary_test_5.md", "w") as f:
+            f.write(summary_out.strip())
 
         # 4. INSERT новой итерации (Immutable)
         new_iteration = current_iteration + 1
@@ -351,10 +287,13 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
             }
         }).execute()
 
-        # 5. Обновляем флаг summarized в chat_history
-        logic.supabase.table('chat_history').update({
-            "summarized": True
-        }).lte('created_at', date_last).execute()
+        #     with open(summary_file, "w") as f:
+        #         f.write(summary_out.strip())
+
+        # if len(history_last) > 0:
+        #     history_new = '\n\n'.join(history_last)
+        #     with open(history_file, "w") as f:
+        #         f.write(history_new.strip())
 
     except Exception as e:
         # Запись в лог, чтобы отслеживать причины ошибок

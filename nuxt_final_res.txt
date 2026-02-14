@@ -1,0 +1,25 @@
+{
+  "error": true,
+  "url": "http://localhost:3000/",
+  "statusCode": 500,
+  "statusMessage": "Server Error",
+  "message": "[@vue/compiler-sfc] Failed to load TypeScript, which is required for resolving imported types. Please make sure \"TypeScript\" is installed as a project dependency.\n\n/home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/popover/Popover.vue\n3  |  import { PopoverRoot, useForwardPropsEmits } from \"reka-ui\"\n4  |  \n5  |  const props = defineProps<PopoverRootProps>()\n   |                            ^^^^^^^^^^^^^^^^\n6  |  const emits = defineEmits<PopoverRootEmits>()\n7  |  ",
+  "data": {
+    "code": "VITE_ERROR",
+    "id": "/components/ui/popover/Popover.vue",
+    "stack": "Error: [@vue/compiler-sfc] Failed to load TypeScript, which is required for resolving imported types. Please make sure \"TypeScript\" is installed as a project dependency.\n\n/home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/popover/Popover.vue\n3  |  import { PopoverRoot, useForwardPropsEmits } from \"reka-ui\"\n4  |  \n5  |  const props = defineProps<PopoverRootProps>()\n   |                            ^^^^^^^^^^^^^^^^\n6  |  const emits = defineEmits<PopoverRootEmits>()\n7  |  \n    at ScriptCompileContext.error (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:19785:11)\n    at importSourceToScope (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22639:16)\n    at resolveTypeFromImport (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22631:23)\n    at innerResolveTypeReference (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22518:14)\n    at resolveTypeReference (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22506:20)\n    at innerResolveTypeElements (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22093:24)\n    at resolveTypeElements (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:22033:20)\n    at resolveRuntimePropsFromType (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:23786:20)\n    at extractRuntimeProps (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:23762:17)\n    at genRuntimeProps (/home/sergey/pet/uv/bookmark/frontend/nuxt-app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:23750:18)",
+    "message": "[@vue/compiler-sfc] Failed to load TypeScript, which is required for resolving imported types. Please make sure \"TypeScript\" is installed as a project dependency.\n\n/home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/popover/Popover.vue\n3  |  import { PopoverRoot, useForwardPropsEmits } from \"reka-ui\"\n4  |  \n5  |  const props = defineProps<PopoverRootProps>()\n   |                            ^^^^^^^^^^^^^^^^\n6  |  const emits = defineEmits<PopoverRootEmits>()\n7  |  "
+  },
+  "stack": [
+    "[@vue/compiler-sfc] Failed to load TypeScript, which is required for resolving imported types. Please make sure \"TypeScript\" is installed as a project dependency.",
+    "",
+    "/home/sergey/pet/uv/bookmark/frontend/nuxt-app/app/components/ui/popover/Popover.vue",
+    "3  |  import { PopoverRoot, useForwardPropsEmits } from \"reka-ui\"",
+    "4  |",
+    "5  |  const props = defineProps<PopoverRootProps>()",
+    "|                            ^^^^^^^^^^^^^^^^",
+    "6  |  const emits = defineEmits<PopoverRootEmits>()",
+    "7  |",
+    ""
+  ]
+}

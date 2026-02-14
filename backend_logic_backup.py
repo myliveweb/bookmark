@@ -129,7 +129,7 @@ def upload_to_supabase(file_path: str, storage_path: str, content_type: str):
             file_options={"content-type": content_type, "upsert": "true"}
         )
 
-async def analyze_markdown_content(markdown_content: str, fire: bool = False):
+async def analyze_markdown_content(markdown_content: str):
     """ИИ-анализ контента."""
     if not active_llm_provider: 
         raise Exception("ИИ-двигатель не инициализирован или не активен")
@@ -143,7 +143,7 @@ async def analyze_markdown_content(markdown_content: str, fire: bool = False):
     
     try:
         # get_llm_completion возвращает dict, поэтому нужно будет его распарсить в AIAnalysisResult
-        llm_response_dict = await get_llm_completion(prompt, fire=fire)
+        llm_response_dict = await get_llm_completion(prompt)
         
         # Предполагаем, что ответ от LLM будет в формате, который можно преобразовать в AIAnalysisResult.
         # Это может быть либо уже готовый JSON, либо текст, который нужно распарсить.
@@ -242,7 +242,7 @@ async def process_bookmark_full_cycle(bookmark_id: int, url: str):
         for p in [raw_path, proc_path, html_path]:
             if os.path.exists(p): os.remove(p)
 
-async def regenerate_new_summary(summary: str, history: str, project_path: str, fire: bool = False):
+async def regenerate_new_summary(summary: str, history: str, project_path: str):
     try:
         # if not active_llm_provider:
         #     raise Exception("ИИ-двигатель не инициализирован или не активен для генерации резюме.")
@@ -295,7 +295,7 @@ Preserve the EXACT technical state of the project. Your goal is INCREMENTAL GROW
 ### 5. Current Focus & Blocking Issues
 (What is the immediate next step?)
 """
-        llm_response_dict = await get_llm_completion(prompt, fire=fire)
+        llm_response_dict = await get_llm_completion(prompt)
         
         new_summary_content = ""
         if "choices" in llm_response_dict and len(llm_response_dict["choices"]) > 0:

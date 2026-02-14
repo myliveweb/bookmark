@@ -34,6 +34,7 @@ class CreateCategoryRequest(BaseModel):
 
 class ProcessUrlRequest(BaseModel):
     url: HttpUrl
+    fire: bool = False
 
 class ProcessUrlResponse(BaseModel):
     status: str
@@ -58,3 +59,4 @@ class RegenerateSummaryRequest(BaseModel):
     last_turn: int
     regenerate_num: int
     project_path: str
+    fire: bool = False
