@@ -168,10 +168,10 @@ DEFAULT_LLM_CONFIG = {
     },
     "groq": {
         "model_names": [
-            "llama-3.3-70b-versatile",
             "meta-llama/llama-4-scout-17b-16e-instruct",
-            "mixtral-8x7b-32768",
-            "llama-3.1-8b-instant"
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant",
+            "mixtral-8x7b-32768"
         ],
         "api_key": os.getenv("GROQ_API_KEY"),
         "base_url": os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1"),

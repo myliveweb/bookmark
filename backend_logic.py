@@ -4,6 +4,9 @@ import uuid
 import time
 from urllib.parse import urlparse
 from playwright.async_api import async_playwright
+
+from transformers import AutoTokenizer
+
 from loguru import logger
 from markitdown import MarkItDown
 from bs4 import BeautifulSoup
@@ -12,7 +15,7 @@ from dotenv import load_dotenv
 
 import json # Добавляем для парсинга JSON
 import re # Добавляем для извлечения данных из текста, если JSON невалидный
-from llm.model import get_llm_completion, active_llm_provider # Изменяем импорт, добавляем active_llm_provider
+from llm.model import get_llm_completion, active_llm_provider, LLMUnavailableError # Изменяем импорт, добавляем active_llm_provider и LLMUnavailableError
 from models import AIAnalysisResult
 import httpx # Добавляем для типизации исключений, если понадобится
 
@@ -41,6 +44,9 @@ if not PROXY_URL or "http" not in PROXY_URL:
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 md_converter = MarkItDown()
+
+# Загружаем токенизатор для Llama 3 (он же для Llama 4)
+tokenizer = AutoTokenizer.from_pretrained("unsloth/llama-3-8b-instruct-bnb-4bit")
 
 def parse_chrome_bookmarks(html_content: str):
     """Парсит HTML-файл закладок Chrome и возвращает список ссылок из нужных папок."""
@@ -132,7 +138,7 @@ def upload_to_supabase(file_path: str, storage_path: str, content_type: str):
 async def analyze_markdown_content(markdown_content: str, fire: bool = False):
     """ИИ-анализ контента."""
     if not active_llm_provider: 
-        raise Exception("ИИ-двигатель не инициализирован или не активен")
+        raise LLMUnavailableError("ИИ-двигатель не инициализирован или не активен")
     
     # Ограничиваем текст до 10000 символов, чтобы влезть в лимит Groq (TPM safety)
     # Это значение может быть скорректировано в зависимости от провайдера и модели
@@ -174,6 +180,9 @@ async def analyze_markdown_content(markdown_content: str, fire: bool = False):
 
         categories = result.categories if result.categories else ["Разное"]
         return {"summary": result.summary, "categories": categories}
+    except LLMUnavailableError:
+        # Просто пробрасываем наверх, чтобы API или Воркер решили что делать
+        raise
     except Exception as e:
         logger.error(f"AI Error: {e}")
         raise e
@@ -206,8 +215,13 @@ async def process_bookmark_full_cycle(bookmark_id: int, url: str):
         # 3. Конвертация в Markdown и ИИ Анализ
         logger.info(f"[3/5] Конвертация и ИИ Анализ (Groq)...")
         res = md_converter.convert(html_path)
-        ai_data = await analyze_markdown_content(res.text_content)
         
+        try:
+            ai_data = await analyze_markdown_content(res.text_content)
+        except LLMUnavailableError:
+            logger.warning(f"⚠️ ИИ временно недоступен для #{bookmark_id}. Оставляем в очереди.")
+            return None # Выходим без обновления БД как "processed"
+
         # 4. Загрузка в Storage
         logger.info(f"[4/5] Загрузка assets в Supabase...")
         storage_filename = f"{bookmark_id}.png"
@@ -242,6 +256,34 @@ async def process_bookmark_full_cycle(bookmark_id: int, url: str):
         for p in [raw_path, proc_path, html_path]:
             if os.path.exists(p): os.remove(p)
 
+# Джин не трогай этот ендпойнт, ето писал Босс, ему это нужно
+def count_tokens(text: str) -> int:
+    return len(tokenizer.encode(text))
+
+# Джин не трогай этот ендпойнт, ето писал Босс, ему это нужно
+async def summary_message(text: str) -> str:
+    prompt = f"""Ниже представлен диалог разработки.
+Твоя задача: ИЗВЛЕЧЬ ТОЛЬКО ТЕХНИЧЕСКУЮ СУТЬ.
+- Оставь: названия новых файлов, изменения в функциях, схемы БД, принятые решения.
+- УДАЛИ: вежливость, пояснения, рассуждения, повторы.
+- Формат: максимально плотный список (bullet points).
+
+ДИАЛОГ:
+{text}"""
+
+    llm_response_dict = await get_llm_completion(prompt)
+
+    new_summary_content = ""
+    if "choices" in llm_response_dict and len(llm_response_dict["choices"]) > 0:
+        new_summary_content = llm_response_dict["choices"][0]["message"]["content"]
+    elif "response" in llm_response_dict:
+        new_summary_content = llm_response_dict["response"]
+    else:
+        raise ValueError(f"Неожиданный формат ответа от LLM для регенерации резюме: {llm_response_dict}")
+
+    return  new_summary_content.strip()
+
+# Джин не трогай этот ендпойнт, ето писал Босс, ему это нужно
 async def regenerate_new_summary(summary: str, history: str, project_path: str, fire: bool = False):
     try:
         # if not active_llm_provider:
@@ -296,7 +338,7 @@ Preserve the EXACT technical state of the project. Your goal is INCREMENTAL GROW
 (What is the immediate next step?)
 """
         llm_response_dict = await get_llm_completion(prompt, fire=fire)
-        
+
         new_summary_content = ""
         if "choices" in llm_response_dict and len(llm_response_dict["choices"]) > 0:
             new_summary_content = llm_response_dict["choices"][0]["message"]["content"]

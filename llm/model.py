@@ -7,6 +7,10 @@ import httpx
 
 from llm.providers import OllamaProvider, GroqProvider, OpenRouterProvider, DEFAULT_LLM_CONFIG, LLMProvider
 
+class LLMUnavailableError(Exception):
+    """Исключение, выбрасываемое при полной недоступности всех ИИ-провайдеров."""
+    pass
+
 # Список всех успешно инициализированных провайдеров в порядке приоритета
 available_providers: List[LLMProvider] = []
 active_llm_provider: Optional[LLMProvider] = None
@@ -71,7 +75,7 @@ async def get_llm_completion(prompt: str, fire: bool = False, **kwargs) -> Dict[
     
     if not available_providers:
         logger.error("Нет доступных провайдеров для выполнения запроса.")
-        return {"error": "No available providers"}
+        raise LLMUnavailableError("No available providers")
 
     # Создаем временную копию списка провайдеров для обхода в рамках этого запроса
     providers_queue = list(available_providers)
@@ -123,4 +127,4 @@ async def get_llm_completion(prompt: str, fire: bool = False, **kwargs) -> Dict[
                     break
 
     logger.critical("Все доступные модели и провайдеры исчерпаны!")
-    return {"error": "All providers failed"}
+    raise LLMUnavailableError("All providers failed")

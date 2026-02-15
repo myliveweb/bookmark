@@ -5,13 +5,17 @@ import json
 from typing import List
 from datetime import datetime
 
+from transformers import AutoTokenizer
+
 from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 from dotenv import load_dotenv # Добавляем загрузку .env
-from llm.model import initialize_llm_providers # Добавляем импорт функции инициализации
+from llm.model import initialize_llm_providers, LLMUnavailableError # Добавляем импорт функций инициализации и ошибки
+from llm.model import get_llm_completion # Изменяем импорт, добавляем get_llm_completion
+
 
 import backend_logic as logic
 from models import (
@@ -43,6 +47,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Загружаем токенизатор для Llama 3 (он же для Llama 4)
+tokenizer = AutoTokenizer.from_pretrained("unsloth/llama-3-8b-instruct-bnb-4bit")
 
 # --- API Endpoints ---
 
@@ -123,7 +130,11 @@ async def process_url(request: ProcessUrlRequest):
                 with open(md_path, "w", encoding="utf-8") as f: f.write(markdown_text)
             except: pass
 
-        ai_data = await logic.analyze_markdown_content(markdown_text, fire=request.fire) if markdown_text else {"summary": "", "categories": []}
+        try:
+            ai_data = await logic.analyze_markdown_content(markdown_text, fire=request.fire) if markdown_text else {"summary": "", "categories": []}
+        except LLMUnavailableError:
+            logger.warning("ИИ недоступен для ручного запроса. Возвращаем пустые поля.")
+            ai_data = {"summary": "", "categories": []}
         
         # Uploads
         paths = {"img": f"temp/{unique_id}.png", "html": f"temp/{unique_id}.html", "md": f"temp/{unique_id}.md"}
@@ -254,6 +265,7 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
     try:
         history_file = ".gemini/hooks/history/last.md"
         summary_file = ".gemini/hooks/history/summary.md"
+        error_task_file = ".gemini/hooks/history/error_task.log"
 
         if not os.path.exists(history_file):
             return {"success": "error", "error": f"File not found({history_file})"}
@@ -297,7 +309,9 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
             .select('id', 'created_at', 'role', 'content') \
             .eq('metadata->>cwd', data.project_path) \
             .eq('summarized', False) \
-            .order('created_at') \
+            .order('created_at', desc=True) \
+            .order('role', desc=True) \
+            .limit(data.regenerate_num*2) \
             .execute()
 
         rows = history_res.data
@@ -308,17 +322,19 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
         date_last = None
         # Формируем текст истории для LLM
         history_for_ai = ""
-        processed_ids = []
-        for r in rows[-data.regenerate_num*2:-data.last_turn*2]:
+        n = 0
+        rows_cut = rows[20:]
+        for r in rows_cut:
+            n += 1
+            num_tokens = logic.count_tokens(r['content'])
+            if num_tokens > 800:
+                r['content'] = await logic.summary_message(r['content'])
+                num_tokens = logic.count_tokens(r['content'])
+                await asyncio.sleep(15)
             role = "USER" if r['role'] == 'user' else "ASSISTANT"
             history_for_ai += f"{role}: {r['content']}\n"
-            processed_ids.append(r['id'])
-            date_last = r['created_at']
-
-        n = 0
-        for row in processed_ids:
-            n += 1
-            print(f"{n}: {row}")
+            if date_last == None:
+                date_last = r['created_at']
 
         print(date_last)
 
@@ -335,6 +351,9 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
 
         summary_new_body = await logic.regenerate_new_summary(old_summary, history_for_ai, data.project_path, fire=data.fire)
 
+        with open(".gemini/hooks/history/summary_test.md", "w") as f:
+            f.write(summary_new_body)
+
         dt = datetime.now()
         formatted = dt.strftime("%H:%M:%S %d.%m.%Y")
 
@@ -347,7 +366,7 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
             "metadata": {
                 "source": "automated_regeneration",
                 "original_date": formatted,
-                "msg_count": len(processed_ids)
+                "msg_count": n
             }
         }).execute()
 
@@ -358,8 +377,129 @@ async def regen_summary_task(data: RegenerateSummaryRequest):
 
     except Exception as e:
         # Запись в лог, чтобы отслеживать причины ошибок
-        with open(".gemini/hooks/history/error_task.log", "a+") as f:
+        with open(error_task_file, "a+") as f:
             f.write(f"\n[BACKGROUND ERROR] {datetime.now()}: {str(e)}\n")
+
+# Джин не трогай этот ендпойнт, ето писал Босс, ему это нужно
+@app.get("/api/boss")
+async def boss():
+    print("Ручной вызов /api/boss\n\n")
+
+    history_res = logic.supabase.table('chat_history') \
+        .select('id', 'created_at', 'role', 'content') \
+        .order('created_at', desc=True) \
+        .order('role', desc=True) \
+        .limit(120) \
+        .execute()
+    
+    rows = history_res.data
+
+    max_content_user = ''
+    max_content_assistant = ''
+    max_tokens_user = 0
+    tokens_user_500 = 0
+    tokens_user_1000 = 0
+    tokens_user_2000 = 0
+    tokens_user_3000 = 0
+    tokens_user_0 = 0
+    max_tokens_assistant = 0
+    tokens_assistant_500 = 0
+    tokens_assistant_1000 = 0
+    tokens_assistant_2000 = 0
+    tokens_assistant_3000 = 0
+    tokens_assistant_0 = 0
+    content_main = ''
+    content_main_user = ''
+    content_main_assistant = ''
+    n = 0
+    for item in rows[20:]:
+        num_tokens = logic.count_tokens(item['content'])
+        if num_tokens > 800:
+            item['content'] = await logic.summary_message(item['content'])
+            num_tokens = logic.count_tokens(item['content'])
+            await asyncio.sleep(15)
+        n += 1
+        # print(f"{n}. ID: {item['id']}, Role: {item['role']}, Tokens: {num_tokens}")
+        content_main += f"{item['content']}\n\n"
+
+        if item['role'] == 'user':
+            content_main_user += f"{item['content']}\n\n"
+        elif item['role'] == 'assistant':
+            content_main_assistant += f"{item['content']}\n\n"
+
+        if item['role'] == 'user' and max_tokens_user < num_tokens:
+            max_content_user = item['content']
+            max_tokens_user = num_tokens
+
+        if item['role'] == 'assistant' and max_tokens_assistant < num_tokens:
+            max_content_assistant = item['content']
+            max_tokens_assistant = num_tokens
+
+        if item['role'] == 'assistant' and num_tokens > 3000:
+            tokens_assistant_3000 += 1
+        elif item['role'] == 'assistant' and num_tokens > 2000:
+            tokens_assistant_2000 += 1
+        elif item['role'] == 'assistant' and num_tokens > 1000:
+            tokens_assistant_1000 += 1
+        elif item['role'] == 'assistant' and num_tokens > 500:
+            tokens_assistant_500 += 1
+        elif item['role'] == 'assistant' and num_tokens > 0:
+            tokens_assistant_0 += 1
+
+        if item['role'] == 'user' and num_tokens > 3000:
+            tokens_user_3000 += 1
+        elif item['role'] == 'user' and num_tokens > 2000:
+            tokens_user_2000 += 1
+        elif item['role'] == 'user' and num_tokens > 1000:
+            tokens_user_1000 += 1
+        elif item['role'] == 'user' and num_tokens > 500:
+            tokens_user_500 += 1
+        elif item['role'] == 'user' and num_tokens > 0:
+            tokens_user_0 += 1
+
+    total_dialog = n/2
+    one_percent = total_dialog/100
+
+    summary_res = logic.supabase.table('project_summaries') \
+        .select('content', 'iteration') \
+        .order('created_at', desc=True) \
+        .limit(1) \
+        .execute()
+
+    last_summary_data = summary_res.data[0]['content']
+
+    out_content = f"{last_summary_data}\n\n{content_main}"
+
+    print("\nВсе цифры приведены в токенах по модели unsloth/llama-3-8b-instruct-bnb-4bit")
+    print("Summary по модели meta-llama/llama-4-scout-17b-16e-instruct")
+    print("One Dialog равен 2 сообщения(User -> Assistant)\n")
+    print("Total Dialogs:", int(total_dialog))
+    print("Old summary Tokens:", logic.count_tokens(last_summary_data))
+    print("Messages Tokens:", logic.count_tokens(content_main))
+    print("New Out LLM summary Tokens:", logic.count_tokens(out_content))
+    print(f"\nUsage Tokens User:\n> 0 and < 500: {tokens_user_0}({tokens_user_0/one_percent:.1f}%)\n> 500 and < 1000: {tokens_user_500}({tokens_user_500/one_percent:.1f}%)\n> 1000 and < 2000: {tokens_user_1000}({tokens_user_1000/one_percent:.1f}%)\n> 2000 and < 3000: {tokens_user_2000}({tokens_user_2000/one_percent:.1f}%)\n> 3000: {tokens_user_3000}({tokens_user_3000/one_percent:.1f}%)")
+    print("Max Tokens User:", max_tokens_user)
+    print("Total Tokens User:", logic.count_tokens(content_main_user))
+    print(f"\nUsage Tokens Assistant:\n> 0 and < 500: {tokens_assistant_0}({tokens_assistant_0/one_percent:.1f}%)\n> 500 and < 1000: {tokens_assistant_500}({tokens_assistant_500/one_percent:.1f}%)\n> 1000 and < 2000: {tokens_assistant_1000}({tokens_assistant_1000/one_percent:.1f}%)\n> 2000 and < 3000: {tokens_assistant_2000}({tokens_assistant_2000/one_percent:.1f}%)\n> 3000: {tokens_assistant_3000}({tokens_assistant_3000/one_percent:.1f}%)")
+    print("Max Tokens Assistant:", max_tokens_assistant)
+    print("Total Tokens Assistant:", logic.count_tokens(content_main_assistant), "\n")
+
+    with open(".gemini/hooks/history/max_tokens_user.md", "w") as f:
+        f.write(max_content_user)
+
+    with open(".gemini/hooks/history/max_tokens_assistant.md", "w") as f:
+        f.write(max_content_assistant)
+
+    new_max = await logic.summary_message(max_content_assistant)
+
+    print("\nTry Summary Max message Assistant Tokens\n")
+    print("Old Max message Assistant Tokens:", logic.count_tokens(max_content_assistant))
+    print("New Max message Assistant Tokens:", logic.count_tokens(new_max))
+
+    with open(".gemini/hooks/history/new_max_tokens_assistant.md", "w") as f:
+        f.write(new_max)
+
+    return {"status": "accepted", "info": "Task started in background"}
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
